@@ -20,3 +20,28 @@
 读了十几年书，终于走出学校，跨入职场，你会发现工作了，除了写代码 Coding 这件事 ，其实还有很多的【认知】需要提升，所以本项目致力于【More Than Code】的学习，不仅仅是 Coding，还有很多不止于 Coding 之外的【知识】。
 
 [公众号](#公众号)和[本项目](https://github.com/rongweihe/MoreThanCode)保持同步更新，喜欢的小伙伴可以点一波关注，有任何意见 or 建议请[联系我](#微信)，**您的[支持](#赞赏)是我前进最大的动力!**
+
+
+# 公众号
+
+内容公众号同步更新，有时候不适合发 Github 的东西我也会发在公众号里面，所以请各位大大也扫码关注，支持一波吧
+
+<p align="center">
+  <a href="https://github.com/rongweihe/MoreThanCode/">
+      <img src="https://i.loli.net/2020/04/11/Ysl9RgLXWJFMaZu.png" height="300" width="700">
+  </a>
+</p>
+
+# 投稿
+
+投稿请添加[上方个人微信二维码](#微信)联系，**请备注来意，感谢您的支持！**
+
+# 赞赏
+
+您的支持是我前进最大的动力
+
+<p align="center">
+  <a href="https://github.com/wmyskxz/MoreThanJava/">
+      <img src="https://i.loli.net/2020/04/11/ktUwph6BZeHf4EG.png" height="350" width="350">
+  </a>
+</p>
