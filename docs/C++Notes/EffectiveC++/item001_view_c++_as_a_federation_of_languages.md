@@ -32,3 +32,113 @@
 
 # 条款 02：尽量以 const，enum，inline替换 #define
 
+这个条款的前提是如果你有定义了一个
+
+```c++
+#define ASP_RADIO 1.63
+```
+
+记号 `ASP_RADIO` 也许从未被编译器识别到；也许在编译器开始处理源码之前就被移走了。（为什么会出现这种情况？）
+
+我们假设编译器没有处理这个定义常量。于是这个记号有可能没有进入记号表（symbool table）内。于是当你处理此常量的时候但获得了一个编译错误，可能会带来困惑。
+
+解决的方法是以一个常量来替换上面的宏 。
+
+```c++
+const double AspRadio = 1.63
+```
+
+作为一个语言常量，`AspRadio` 肯定能被编译器看到，当然就会进入记号表。
+
+此外，对于浮点常量而言，使用常量可能比使用 #define 导致较小量的码（编译阶段的目标码 object code）。
+
+改为常量就不会出现这种情况。
+
+当我们以常量替换 `#define`  的时候，有两种特殊情况需要值得说说：
+
+1、当定义常量指针的时候，由于常量定义式通常被放在头文件内，因此有必要将指针（而不是指针所指之物）声明为 `const` 。
+
+2、第二个值得注意的是：class 专属常量，为了将常量的作用域限制于 class 内，你必须让它成为一个成员；而确保此常量至多只有一份实体，所以必须让它成为一个 static 成员。
+
+3、我们无法利用 #define 创建一个 class 专属常量，因为 #defines 并不重视作用域。一旦宏被定义，它就在其后的编译过程中有效。这意味着 #define 不仅不能够用来定义 class 专属常量。也不能提供任何封装性。
+
+4、无论何时写出这种宏，你必须记住为宏中的所有实参加上小括号，否则在有些人在表达式中调用这个宏的时候 有可能遭到麻烦
+
+```c++
+#define CALC_MAX(a,b) f((a) > (b) ? (a) : (b));
+```
+
+解决上面的办法是用 `template inline 函数替换` 。
+
+有了 `const`，`enums`，`inlines`，我们对预处理（特别是 `#define` ）的需求降低了，但并非完全消除。 
+
+`#include` 仍然是必需品，而 `#ifdef/#ifndef` 也继续扮演着控制编译的角色。目前还不到预处理器完全不起作用的时候。
+
+**请记住：**
+
+> 对于单纯变量，最好以 const 或者 enums 来替代 #define。
+>
+> 对于形式函数的宏，最好改用 inline 函数替代 #define。
+
+# 条款 03：尽可能使用 const
+
+#### 01
+
+`const ` 关键字的一个奇妙的事情在于，它允许你指定一个语义约束。（也就是指定一个“不改被改动”的对象）。
+
+而编译器会强制实施这项约束。它允许你告诉编译器和其它程序员定义的值保持不变。也就是说，只要你定义的这个值是确定不能改动的，你就应该明确地告诉编译器。
+
+关键词  `const `  多才多艺。可以用它来修饰很多常量。
+
+如果   `const `  出现在星号左边，意味着被指物是常量；
+
+如果  `const `  出现在星号右边，意味着指针自身是常量；
+
+如果出现在星号两边，表示被指物和指针自身都是常量；
+
+在 `STL` 迭代器的用法里面，我们经常会看到这样一种写法：
+
+#### 02
+
+声明迭代器为 const 就像声明指针为 const 一样（声明一个 T* const 指针），表示这个迭代器不得指向不同的东西，但它所指的东西的值是可以改变的。
+
+```c++
+std::vector<int> vec;
+const std::vector<int>::iterator iter = vec.begin();//iter的作用类似 T* const
+*iter = 10;//通过编译，改变 iter 所指之物
+++iter;//不能通过编译，iter 是个 const 
+
+//error: passing 'const iterator' {aka 'const __gnu_cxx::__normal_iterator<int*, std::vector<int> >'} as 'this' argument discards qualifiers [-fpermissive]
+
+std::vector<int> vecc;
+std::vector<int>::const_iterator citer = vecc.begin();//iter的作用类似 T* const
+*citer = 10;//不能通过编译，*citer 是个 const
+++citer;//能通过编译，改变 citer
+
+//error: assignment of read-only location 'citer.__gnu_cxx::__normal_iterator<const int*, std::vector<int> >::operator*()'
+```
+
+#### 03
+
+令函数返回一个常量值，往往可以降低因客户端错误而造成的意外，而又不至于放弃安全性和高效性。
+
+举个例子：考虑有理数的 operator* 声明式。
+
+```c++
+class Rational {...};
+const Rational operator* (const Rational& lhs, const Rational& rhs);
+```
+
+你可能会觉得第一次声明会奇怪：为什么返回一个 const 对象？原因是如果不这样客户就会可能执行下面的操作：
+
+```c++
+Rational a,b,c;
+(a*b) = c
+```
+
+你可能会奇怪：为什么会有人想对两个数值的乘积在做一次赋值。
+
+
+
+
+
