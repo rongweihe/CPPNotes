@@ -46,3 +46,6 @@ class Widget {
 ###  请记住
 
 - **最好令赋值操作符（operator）返回一个 reference to *this 。**
+
+- **另外注意注意参数里是一个 const 引用类型**
+
