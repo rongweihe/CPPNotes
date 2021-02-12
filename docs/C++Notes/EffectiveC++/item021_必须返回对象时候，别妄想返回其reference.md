@@ -59,3 +59,4 @@ inline const Object operator*(const Obj& lhs, const object& rhs) {
 最后来个总结：
 
 - **一个必须返回对象的函数的正确写法就是让那个函数返回一个对象。**
+
