@@ -62,6 +62,8 @@
 
 30、格局要大，多和运营，产品这些人交朋友，他们不一定比你厉害，但它们一定能给你提供很多不一样的视角，这些视角才是你信息的外部增量。
 
+31、多读书，多实践。
+
 
 
 <center> <img src="https://cdn.jsdelivr.net/gh/rongweihe/ImageHost01/zgnb.png" width="50%"/></center>
