@@ -8,13 +8,7 @@
 
 
 
-
-
-
-
-
+<center> <img src="https://cdn.jsdelivr.net/gh/rongweihe/ImageHost01/zgnb.png" width="50%"/></center>
 
 from 「帅张和他的朋友们」
-
-
 
