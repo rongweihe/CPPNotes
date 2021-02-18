@@ -64,6 +64,8 @@
 
 31、多读书，多实践。
 
+32、坚持别人所不能坚持的，收获别人所不能收获的。
+
 
 
 <center> <img src="https://cdn.jsdelivr.net/gh/rongweihe/ImageHost01/zgnb.png" width="50%"/></center>
