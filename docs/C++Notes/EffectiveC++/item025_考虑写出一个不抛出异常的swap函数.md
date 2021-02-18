@@ -78,7 +78,7 @@ namespace WidgetStuff {
 }
 ```
 
-一般而言，重载 function template 时要注意命名空间，std 的内容完全由 C++ 标准委员会决定，它禁止我们膨胀哪些已经声明好的东西。
+一般而言，重载 `function template`  时要注意命名空间，std 的内容完全由 C++ 标准委员会决定，它禁止我们膨胀哪些已经声明好的东西。
 
 **最后来个总结**
 
