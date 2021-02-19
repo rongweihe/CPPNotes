@@ -112,3 +112,8 @@ std::tr1::shared_ptr<Person> Person::create(const std::string& name,
   - 空间：派生对象必须内含一个 vptr；
   - 时间：每次调用需要付出一次间接跳跃（indirect jump）
 
+**最后总结一下：**
+
+- 支持“编译依存性最小化”的一般构想是：相依于申明式，不要相依于定义式。基于此构想的两个手段是 Handle classes 和 Interface classes。
+
+- 程序库头文件应该以“完全且仅有申明式”的形式存在。这种做法不论是否设计 template 都适用。
