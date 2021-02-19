@@ -98,7 +98,7 @@ private:
 std::tr1::shared_ptr<Person> Person::create(const std::string& name,
                                             const Date& birthDate,
                                             const Address& addr) {
-    return std::tr1::shared)ptr<Person>(new RealPerson(name, birthDate, addr));
+    return std::tr1::shared_ptr<Person>(new RealPerson(name, birthDate, addr));
 }
 ```
 
