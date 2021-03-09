@@ -28,6 +28,9 @@
 #define POLLER_EVENTS_MAX		256
 #define POLLER_NODE_ERROR		((struct __poller_node *)-1)
 
+/*
+poll 节点
+*/
 struct __poller_node
 {
 	int state;
@@ -47,6 +50,9 @@ struct __poller_node
 	struct __poller_node *res;
 };
 
+/*
+poller 数据结构
+*/
 struct __poller
 {
 	size_t max_open_files;
@@ -69,9 +75,43 @@ struct __poller
 	pthread_mutex_t mutex;
 	char buf[POLLER_BUFSIZE];
 };
+#ifdef __linux__
 
+//封装 epoll_create 创建文件描述符 指向内核创建的描述符集 之后的操作都通过描述符来操作
+static inline int __poller_create_pfd() {
+	return epoll_create(1);
+}
 
+//添加文件描述符
+static inline int __poller_add_fd(int fd, int event, void *data,
+								poller_t *poller) 
+{
+	struct epoll_event ev = {
+		.events 	= event;
+		.data   	= {
+			.ptr	= data
+		}
+	};
+	return epoll_ctl(poller->pfd, EPOLL_CTL_ADD, fd, &ev);
+}
 
+static inline int __poller_del_fd(int fd, int event, poller_t *poller)
+{
+	return epoll_ctl(poller->pfd, EPOLL_CTL_DEL, fd, NULL);
+}
+
+static inline int __poller_mod_fd(int fd, int old_event,
+								  int new_event, void *data,
+								  poller_t *poller)
+{
+	struct epoll_event ev = {
+		.events		=	new_event,
+		.data		=	{
+			.ptr	=	data
+		}
+	};
+	return epoll_ctl(poller->pfd, EPOLL_CTL_MOD, fd, &ev);
+}
 
 
 
