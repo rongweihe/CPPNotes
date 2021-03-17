@@ -1,3 +1,6 @@
+源码
+
+```c++
 
 #include <deque>
 #include <algorithm>
@@ -245,3 +248,5 @@ deque<T, Alloc, BufSize>::insert_aux(iterator pos, const value_type& x) {
   *pos = x_copy;
   return pos;
 }
+```
+
