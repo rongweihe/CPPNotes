@@ -54,3 +54,13 @@ iterator allocate_and_fill(size_type n, const T& x) {
     }
     __STL_UNWIND(data_allocator::deallocate(result, n));
 }
+
+
+iterator erase(iterator position) {
+  link_type next_node = link_type(position.node->next);
+  link_type prev_node = link_type(position.node->prev);
+  prev_node->next = next_node;
+  next_node->prev = prev_node;
+  destroy_node(position.node);
+  return iterator(next_node);
+}
