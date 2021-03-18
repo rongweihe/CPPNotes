@@ -21,7 +21,7 @@ public:
 	vector(size_type n, const T& value) { fill_initialize(n, value); } // 接受一个大小和初始化值. int和long都执行相同的函数初始化
 	vector(int n, const T& value) { fill_initialize(n, value); }	
 	vector(long n, const T& value) { fill_initialize(n, value); }
-	vector(const vector<T, Alloc>& x); 							// 接受一个vector参数的构造函数
+	vector(const vector<T, Alloc>& x); // 接受一个vector参数的构造函数
 public:
     typedef T value_type;					// 定义vector自身的嵌套型别
     typedef value_type* pointer;
