@@ -1,11 +1,8 @@
 源码
 
-
-
 ```c++
 /*
 [1]对vector的任何操作一旦引起空间重新配置指向原vector的所有迭代器就会失效
-
 */
 #include <vector>
 #include <algorithm>
@@ -13,8 +10,6 @@
 using namespace std;
 
 typedef typename __gnu_cxx::__alloc_traits<_Alloc>::template rebind<_Tp>::other _Tp_alloc_type;
-
-
 
 #include <string>
 
