@@ -10,7 +10,13 @@
   <a href="https://www.zhihu.com/people/herongwei"><img src="https://img.shields.io/badge/Zhihu-%E7%9F%A5%E4%B9%8E-blue.svg" alt="知乎"></a>
   <a href="#投稿"><img src="https://img.shields.io/badge/Contribute-%E6%8A%95%E7%A8%BF-blue.svg" alt="投稿"></a>
 </p>
-![](https://cdn.jsdelivr.net/gh/rongweihe/ImageHost01/gzh/CPPNotes01.png)
+
+
+<p align="center">
+  <a href="https://github.com/rongweihe/CPPNotes/">
+      <img src="https://cdn.jsdelivr.net/gh/rongweihe/ImageHost01/gzh/CPPNotes01.png">
+  </a>
+</p>
 
 如下是 C++ 后台研发技术路线以及知识点，这里有很多细节，还需要不断完善。 欢迎大家通过[【公众号】](https://github.com/rongweihe/CPPNotes#公众号) 或者加我[【微信】](https://github.com/rongweihe/CPPNotes#微信) 与我交流，一起成长一起进步！
 
@@ -105,7 +111,8 @@
 您的支持是我前进最大的动力
 
 <p align="center">
-  <a href="https://github.com/wmyskxz/MoreThanJava/">
+  <a href="https://github.com/rongweihe/CPPNotes">
       <img src="https://i.loli.net/2020/04/11/ktUwph6BZeHf4EG.png" height="350" width="350">
   </a>
 </p>
+
