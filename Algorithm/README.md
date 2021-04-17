@@ -4,6 +4,40 @@
 
 
 
+### 冒泡排序
+
+```c++
+#include <bits/stdc++.h>
+
+using namespace std;
+
+void Bubble_sort(int *a,int n)
+{
+    int i,j;
+    bool flag= true;
+    for(int i=0; i<n&&flag; ++i)
+    {
+        flag=false;
+        for(int j=n-2; j>=i; --j)
+        {
+            if(a[j] >a[j+1])
+            {
+                swap(a[j],a[j+1]);
+                flag= true;
+            }
+        }
+    }
+}
+int main()
+{
+    int a[6]={4,7,23,56,8,100};
+    Bubble_sort(a,6);
+    for(int i=0; i<6; ++i) cout<<a[i]<<endl;
+}
+```
+
+
+
 ### 归并排序
 
 ```c++
@@ -45,6 +79,45 @@ int main() {
     int a[6]={4,7,23,56,8,100};
     int tp[6];
     merge_sort(a,0,5,tp);
+    for(int i=0; i<6; ++i) cout<<a[i]<<endl;
+}
+```
+
+
+
+### 快速排序
+
+```c++
+#include <bits/stdc++.h>
+using namespace std;
+int Partition(int *a,int L,int R)
+{
+    int piv = a[L];
+    int tmp= piv;
+    while(L<R)
+    {
+        while(L<R && a[R]>=piv) --R;
+        a[L]=a[R];
+        while(L<R && a[L]<=piv) ++L;
+        a[R]=a[L];
+    }
+    a[L]=tmp;
+    return L;
+}
+void quick_sort(int *a,int L,int R)
+{
+    int pivot;
+    if(L<R)
+    {
+        pivot = Partition(a,L,R);
+        quick_sort(a,L,pivot-1);
+        quick_sort(a,pivot+1,R);
+    }
+}
+int main()
+{
+    int a[]={4,7,23,56,8,100};
+    quick_sort(a,0,6);
     for(int i=0; i<6; ++i) cout<<a[i]<<endl;
 }
 ```
