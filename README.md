@@ -18,7 +18,7 @@
   </a>
 </p>
 
-如下是 C++ 后台研发技术路线以及知识点，这里有很多细节，还需要不断完善。 欢迎大家通过[【公众号】](https://github.com/rongweihe/CPPNotes#公众号) 或者加我[【微信】](https://github.com/rongweihe/CPPNotes#微信) 与我交流，一起成长一起进步！
+如下是 C++ 后台研发技术路线以及知识点，这里有很多细节，还需要不断完善。 欢迎大家通过[【公众号】](https://github.com/rongweihe/CPPNotes#我的公众号) 或者加我[【微信】](https://github.com/rongweihe/CPPNotes#关于作者) 与我交流，一起成长一起进步！
 
 以下没有连接的内容就是还没有写，笔者正在拼命赶稿 ing....
 
