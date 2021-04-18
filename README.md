@@ -53,6 +53,7 @@
 # 数据库
 
 - [Redis复习](https://github.com/rongweihe/CS_Offer/blob/master/notes/%E6%95%B0%E6%8D%AE%E5%BA%93.md)
+- [Redis基础数据结构]()
 
 # 海量数据处理
 
