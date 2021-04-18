@@ -1,20 +1,14 @@
 # CPPNotes
 <p align="center">
-  <a href="https://github.com/rongweihe/MoreThanCode/">
-    <img src="https://i.loli.net/2020/04/11/Ik38sbAQZMlXdEh.jpg" width="400" height="200">
-  </a>
-</p>
-<p align="center">
   <a href="#微信"><img src="https://img.shields.io/badge/WeChat-微信-green.svg" alt="微信"></a>
   <a href="#公众号"><img src="https://img.shields.io/badge/%E5%85%AC%E4%BC%97%E5%8F%B7-herongwei-green.svg" alt="公众号"></a>
   <a href="https://www.zhihu.com/people/herongwei"><img src="https://img.shields.io/badge/Zhihu-%E7%9F%A5%E4%B9%8E-blue.svg" alt="知乎"></a>
   <a href="#投稿"><img src="https://img.shields.io/badge/Contribute-%E6%8A%95%E7%A8%BF-blue.svg" alt="投稿"></a>
 </p>
 
-
 <p align="center">
   <a href="https://github.com/rongweihe/CPPNotes/">
-      <img src="https://cdn.jsdelivr.net/gh/rongweihe/ImageHost01/gzh/CPPNotes01.png">
+      <img src="https://cdn.jsdelivr.net/gh/rongweihe/ImageHost01/gzh/CPPNotes-herongwei.png">
   </a>
 </p>
 
