@@ -31,6 +31,12 @@
 - [数据结构与算法学习](https://github.com/rongweihe/Algorithms)
 - [二叉树四种遍历方式](https://mp.weixin.qq.com/s?__biz=MzIzNzg5MDg0OA==&mid=2247484604&idx=1&sn=8fb7c1e8258198461baa123ac5c4ba05&chksm=e8c0f8f3dfb771e5688ef90a2045b8eacb21005a1dd40aa829f1db8f6f361b7596f7c746f473&token=766390174&lang=zh_CN#rd)
 
+# 数据密集型应用系统设计-读书笔记
+
+- [第一章：构建可靠性、可扩展性、可维护性的应用](https://zhuanlan.zhihu.com/p/363797525)
+- [第二章：数据模型与查询语言](https://zhuanlan.zhihu.com/p/363844329)
+- [第三章：存储与检索](https://zhuanlan.zhihu.com/p/369449070)
+
 # 设计模式
 
 - [C++设计模式]
@@ -75,7 +81,7 @@
 
 # 程序员求职
 
-**岗位：社招-搜狗搜索APP-后端开发工程师-搜索事业部-全职**
+**岗位：社招-搜狗搜索 APP-后端开发工程师-搜索事业部-全职**
 
 **地点：北京**
 
