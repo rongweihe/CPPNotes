@@ -36,6 +36,12 @@
 - [第一章：构建可靠性、可扩展性、可维护性的应用](https://zhuanlan.zhihu.com/p/363797525)
 - [第二章：数据模型与查询语言](https://zhuanlan.zhihu.com/p/363844329)
 - [第三章：存储与检索](https://zhuanlan.zhihu.com/p/369449070)
+- [第四章：编码与演化](https://zhuanlan.zhihu.com/p/369534090)
+- [第五章：分布式数据](https://zhuanlan.zhihu.com/p/369558818)
+- [第六章：复制](https://zhuanlan.zhihu.com/p/369898756)
+- [第六章：分区](https://zhuanlan.zhihu.com/p/369895585)
+- [第七章：事务](https://zhuanlan.zhihu.com/p/369844360)
+- [第八章：分布式系统的麻烦](https://zhuanlan.zhihu.com/p/370239763)
 
 # 设计模式
 
@@ -141,4 +147,3 @@
       <img src="https://i.loli.net/2020/04/11/ktUwph6BZeHf4EG.png" height="350" width="350">
   </a>
 </p>
-
