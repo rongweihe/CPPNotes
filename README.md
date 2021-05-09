@@ -85,6 +85,10 @@
 - 内存泄露检查工具Valgrind
 - makefile编写
 
+# 程序人生
+
+1、[承认自己的软弱，是成长的第一步](https://mp.weixin.qq.com/s/0M2KYGWU-Jldvc9gbKAEew)
+
 # 程序员求职
 
 **岗位：社招-搜狗搜索 APP-后端开发工程师-搜索事业部-全职**
