@@ -85,9 +85,18 @@
 - 内存泄露检查工具Valgrind
 - makefile编写
 
+# 开源框架
+
+- ACE网络框架源码：链接: https://pan.baidu.com/s/1RDktOVBl_6mWoy3-ULN8oA  密码: 23d4。
+- 
+
 # 程序人生
 
 1、[承认自己的软弱，是成长的第一步](https://mp.weixin.qq.com/s/0M2KYGWU-Jldvc9gbKAEew)
+
+2、大佬的美国打拼十年，回国创业。
+
+
 
 # 程序员求职
 
