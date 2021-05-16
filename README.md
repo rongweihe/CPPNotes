@@ -94,9 +94,9 @@
 
 1、[承认自己的软弱，是成长的第一步](https://mp.weixin.qq.com/s/0M2KYGWU-Jldvc9gbKAEew)
 
-2、大佬的美国打拼十年，回国创业。
+2、[大佬的美国打拼十年，回国创业]()
 
-
+3、[小贺的第一份实习，半个月就跑路](https://mp.weixin.qq.com/s/uZRKzFNjtF8HLjEVXc1b9Q)
 
 # 程序员求职
 
