@@ -142,10 +142,9 @@
 
 <p align="center">
   <a href="https://github.com/rongweihe/MoreThanCode/">
-      <img src="https://i.loli.net/2020/04/11/Ysl9RgLXWJFMaZu.png" height="200" width="500">
+      <img src="https://cdn.jsdelivr.net/gh/rongweihe/ImageHost01/gzh/%E5%85%AC%E4%BC%97%E5%8F%B7%E5%BA%95%E9%83%A8.jpeg" height="200" width="500">
   </a>
 </p>
-
 
 # 投稿
 
