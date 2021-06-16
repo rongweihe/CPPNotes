@@ -263,3 +263,56 @@ int main()
 
 从实例可以看出来 `adjacent_difference`与 `partial_sum`相结合可以恢复。
 
+### 5、power
+
+一个版本：幂次方。如果指定为乘法运算，则当n >= 0 时传回 x^n
+
+```c++
+// Returns x ** n, where n >= 0.  Note that "multiplication"
+//  is required to be associative, but not necessarily commutative.   
+template <class T, class Integer, class MonoidOperation>
+T power(T x, Integer n, MonoidOperation op) {
+  if (n == 0)
+    return identity_element(op);
+  else {
+    while ((n & 1) == 0) {
+      n >>= 1;
+      x = op(x, x);
+    }
+
+    T result = x;
+    n >>= 1;
+    while (n != 0) {
+      x = op(x, x);
+      if ((n & 1) != 0)
+        result = op(result, x);
+      n >>= 1;
+    }
+    return result;
+  }
+}
+
+template <class T, class Integer>
+inline T power(T x, Integer n) {
+  return power(x, n, multiplies<T>());
+}
+```
+
+打过竞赛的同学，看到这个函数肯定不陌生，在 C++ 的快速幂就是一样的逻辑。
+
+这里用到了一个技巧：
+
+- 当 b 为偶数时，a^b 可以转为 a^2的 b/2次方。
+- 当 b 为奇数时，a^b 可以转为 a^2 的 b/2次方，再乘以 a。
+
+像这样不断递归下去，每次 n 都减半，于是可以在 n(logn) 时间内完成幂运算。
+
+```c++
+ll q_pow(ll x,ll n,ll m){
+	if(n == 0)	return 1;
+	ll res = q_pow(x * x % m,n/2,m);
+	if(n & 1)	res = res * x % m;
+	return res;
+}
+```
+
