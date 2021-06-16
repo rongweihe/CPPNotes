@@ -69,6 +69,7 @@ INSERT INTO project(proj_num,proj_name,start_date,end_date,of_dpt) VALUES(05,'pr
 INSERT INTO project(proj_num,proj_name,start_date,end_date,of_dpt) VALUES(06,'proj_f','2020-02-26','2020-03-01','dpt2');
 
 
+INSERT INTO project(proj_num,proj_name,start_date,end_date,of_dpt) VALUES(06,'proj_f','2020-02-26','2020-03-01','dpt2');
 
 
 

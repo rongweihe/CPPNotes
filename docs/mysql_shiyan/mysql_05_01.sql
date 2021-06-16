@@ -57,9 +57,6 @@ INSERT INTO employee(id,name,age,salary,phone,in_dpt) VALUES(05,'xiaowei',22,700
 INSERT INTO employee(id,name,age,salary,phone,in_dpt) VALUES(06,'xiaoba',26,7500,123456,'dpt1');
 
 
-
-
-
 #INSERT INTO project(proj_num,proj_name,start_date,end_date,of_dpt) VALUES(编号,'工程名','开始时间','结束时间','部门名');
 
 INSERT INTO project(proj_num,proj_name,start_date,end_date,of_dpt) VALUES(01,'proj_a','2020-01-15','2020-01-31','dpt2');
@@ -78,3 +75,22 @@ INSERT INTO table_1 VALUES(04,36,60);
 INSERT INTO table_1 VALUES(05,40,32);
 INSERT INTO table_1 VALUES(06,90,42);
 
+CREATE TABLE test_kafka
+(
+  id INT(10) PRIMARY KEY,
+  site CHAR(20) NOT NULL,
+  host CHAR(50) NOT NULL,
+  apid CHAR(20) NOT NULL,
+  name CHAR(20) NOT NULL,
+  package_name CHAR(20) NOT NULL,
+  site CHAR(20) NOT NULL,
+  site CHAR(20) NOT NULL,
+  site CHAR(20) NOT NULL,
+  site CHAR(20) NOT NULL,
+  site CHAR(20) NOT NULL,
+  site CHAR(20) NOT NULL,
+  site CHAR(20) NOT NULL,
+);
+
+
+INSERT INTO test_kafka(id,det_name_int) VALUES(1,'沪江开心词场');
