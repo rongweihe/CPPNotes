@@ -140,6 +140,60 @@ count_if(InputIterator first, InputIterator last, Predicate pred) {
 }
 ```
 
+### 5、replace
+
+两个版本。
+
+版本一 : 将所有是 old_value 的数据换成 new_value。
+
+版本二 : 将所有是满足仿函数(函数)的数据换成 new_value。
+
+```c++
+// 版本一 : 将所有是old_value的数据换成new_value
+template <class ForwardIterator, class T>
+void replace(ForwardIterator first, ForwardIterator last, const T& old_value,
+             const T& new_value) {
+  for ( ; first != last; ++first)
+    if (*first == old_value) *first = new_value;
+}
+// 版本二 : 将所有是满足仿函数的数据换成new_value
+template <class ForwardIterator, class Predicate, class T>
+void replace_if(ForwardIterator first, ForwardIterator last, Predicate pred,
+                const T& new_value) {
+  for ( ; first != last; ++first)
+    if (pred(*first)) *first = new_value;
+}
+```
+
+### 6、replace_copy
+
+两个版本，两个版本都不会修改原容器的数据
+
+版本一 : 将所有元素保存在另个容器中，并将所有是 old_value 的数据换成 new_value。
+
+版本二 : 将所有元素保存在另个容器中，并将所有满足仿函数的数据换成 new_value。
+
+```c++
+// 将所有元素保存在另个容器中, 并将所有是old_value的数据换成new_value
+template <class InputIterator, class OutputIterator, class T>
+OutputIterator replace_copy(InputIterator first, InputIterator last,
+                            OutputIterator result, const T& old_value,
+                            const T& new_value) {
+  for ( ; first != last; ++first, ++result)
+    *result = *first == old_value ? new_value : *first;
+  return result;
+}
+// 将所有元素保存在另个容器中, 并将所有满足仿函数的数据换成new_value
+template <class Iterator, class OutputIterator, class Predicate, class T>
+OutputIterator replace_copy_if(Iterator first, Iterator last,
+                               OutputIterator result, Predicate pred,
+                               const T& new_value) {
+  for ( ; first != last; ++first, ++result)
+    *result = pred(*first) ? new_value : *first;
+  return result;
+}
+```
+
 
 
 ## 基本算法源码剖析
