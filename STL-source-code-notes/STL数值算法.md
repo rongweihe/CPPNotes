@@ -316,3 +316,35 @@ ll q_pow(ll x,ll n,ll m){
 }
 ```
 
+### 6、iota 
+
+设定某个区间的内容, 使其每个元素从指定值value开始, 呈现递增。
+
+```c++
+template <class ForwardIterator, class T>
+void iota(ForwardIterator first, ForwardIterator last, T value) {
+  while (first != last) *first++ = value++;
+}
+```
+
+实例：
+
+```c++
+int main() {
+	int a[4] = {1, 2, 3, 4};
+	iota(a+1, a+4, 10);
+	for(const auto &i : a)
+		cout << i << ' '; // 1 10 11 12
+	return 0;
+}
+```
+
+### 总结
+
+本节对`numeric.h`中的算法进行了分析，这些都是很简单的函数实现，但是大都提供了两个版本，可接受二元操作的函数，这由用户定义，也就提高了STL的灵活性。
+
+参考：
+
+《STL源码剖析》-侯捷
+
+https://github.com/FunctionDou/STL/
