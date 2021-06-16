@@ -25,6 +25,7 @@
 - [再硬核|5 千字长文+ 30 张图解 | 陪你手撕 STL 空间配置器源码](https://mp.weixin.qq.com/s/1rLCzJtspYzAxa0g6-BFCA)
 - [硬核|万字长文炸裂！手撕 STL 迭代器源码与 traits 编程技法](https://mp.weixin.qq.com/s/srgj9KnxQrru_hMv-IVpWw)
 - [超硬核 | 2 万字+20 图带你手撕 STL 序列式容器源码](https://mp.weixin.qq.com/s/NcrnwsB2gjq9h7W2hIZ6PQ)
+- [硬核来袭 | 2 万字 + 10 图带你手撕 STL 关联式容器源码](https://mp.weixin.qq.com/s/suN3EI_HmhilcPvVK6lAdQ)
 
 # 数据结构与算法
 
