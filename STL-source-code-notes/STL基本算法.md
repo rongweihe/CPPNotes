@@ -45,6 +45,56 @@ int main() {
 
 很明显尝试初始化值是有问题的，因为`for_each`不会修改传入的值，传入的是右值，所以一般使用`for_each`都是实现迭代器的输出， 这样就不用写for循环再来输出了。
 
+### 2、find
+
+两个版本.
+
+```c++
+// 版本一
+template <class InputIterator, class T>
+InputIterator find(InputIterator first, InputIterator last, const T& value) {
+  while (first != last && *first != value) ++first;
+  return first;
+}
+// 版本二
+template <class InputIterator, class Predicate>
+InputIterator find_if(InputIterator first, InputIterator last,
+                      Predicate pred) {	
+  while (first != last && !pred(*first)) ++first;	// 一元操作, 自定义判断条件
+  return first;
+}
+```
+
+### 3、adjacent_find
+
+```c++
+// 第一个版本找出相邻元素间第一个出现元素相同的情况, 返回第一次出现的迭代器
+template <class ForwardIterator>
+ForwardIterator adjacent_find(ForwardIterator first, ForwardIterator last) {
+  if (first == last) return last;
+  ForwardIterator next = first;
+  while(++next != last) {
+    if (*first == *next) return first;
+    first = next;
+  }
+  return last;
+}
+// 第二个版本找出相邻元素间第一个满足仿函数条件的情况, 返回第一次满足情况的迭代器
+template <class ForwardIterator, class BinaryPredicate>
+ForwardIterator adjacent_find(ForwardIterator first, ForwardIterator last,
+                              BinaryPredicate binary_pred) {
+  if (first == last) return last;
+  ForwardIterator next = first;
+  while(++next != last) {
+    if (binary_pred(*first, *next)) return first;
+    first = next;
+  }
+  return last;
+}
+```
+
+
+
 ## 基本算法源码剖析
 
 ```c++
