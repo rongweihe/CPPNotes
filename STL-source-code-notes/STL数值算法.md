@@ -95,3 +95,83 @@ T inner_product(InputIterator1 first1, InputIterator1 last1,
 }
 ```
 
+### 3、partial_sum
+
+两个版本. 功能 : 将传入的`InputIterator`两个迭代器范围内的值进行局部求和. 即 y0 = x0; y1 = x0 + x1; ...
+
+版本一 : 默认操作
+
+```c++
+template <class InputIterator, class OutputIterator, class T>
+OutputIterator __partial_sum(InputIterator first, InputIterator last,
+                             OutputIterator result, T*) {
+  T value = *first;
+    // 跳过x0, 从x1开始局部求和
+  while (++first != last) {
+    value = value + *first;
+    *++result = value;
+  }
+  return ++result;
+}
+
+template <class InputIterator, class OutputIterator>
+OutputIterator partial_sum(InputIterator first, InputIterator last,
+                           OutputIterator result) {
+  if (first == last) return result;
+  *result = *first;
+  return __partial_sum(first, last, result, value_type(first));
+}
+```
+
+版本二 : 比版本一多了一个二元操作。
+
+```c++
+template <class InputIterator, class OutputIterator, class T,
+          class BinaryOperation>
+OutputIterator __partial_sum(InputIterator first, InputIterator last,
+                             OutputIterator result, T*,
+                             BinaryOperation binary_op) {
+  T value = *first;
+	// 跳过x0, 从x1开始局部求和
+  while (++first != last) {
+    value = binary_op(value, *first);
+    *++result = value;
+  }
+  return ++result;
+}
+
+template <class InputIterator, class OutputIterator, class BinaryOperation>
+OutputIterator partial_sum(InputIterator first, InputIterator last,
+                           OutputIterator result, BinaryOperation binary_op) {
+  if (first == last) return result;
+  *result = *first;
+  return __partial_sum(first, last, result, value_type(first), binary_op);
+}
+```
+
+实例：
+
+```c++
+inline int partial_inc(int a1, int a2) {
+	return a2+2;
+}
+
+int main() {
+	int a[4] = {1, 2, 3, 4 };
+	int a2[4];
+
+	partial_sum(a, a+sizeof(a)/sizeof(int), a2);	// 版本一
+	for(const auto &i : a)
+    cout << i << " ";	// 1 2 3 4
+
+	for(const auto &i : a2)
+		cout << i << " ";	// 1 3 6 10 
+	
+	partial_sum(a, a+sizeof(a)/sizeof(int), a2, partial_inc);	// 版本二
+	for(const auto &i : a2)
+		cout << i << " ";	// 1 4 5 6 
+
+	exit(0);
+}
+```
+
