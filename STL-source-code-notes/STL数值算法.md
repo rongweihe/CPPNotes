@@ -175,3 +175,91 @@ int main() {
 }
 ```
 
+### 4、adjacent_difference
+
+两个版本. 功能 : 将传入的`InputIterator`两个迭代器范围内的值进行局部相减. 即 y0 = x0; y1 = x0 - x1 ...
+
+版本一
+
+```c++
+template <class InputIterator, class OutputIterator, class T>
+OutputIterator __adjacent_difference(InputIterator first, InputIterator last, 
+                                     OutputIterator result, T*) {
+  T value = *first;
+  while (++first != last) {
+    T tmp = *first;
+    *++result = tmp - value;	// 进行相减
+    value = tmp;
+  }
+  return ++result;
+}
+
+template <class InputIterator, class OutputIterator>
+OutputIterator adjacent_difference(InputIterator first, InputIterator last, 
+                                   OutputIterator result) {
+  if (first == last) return result;
+  *result = *first;
+  return __adjacent_difference(first, last, result, value_type(first));
+}
+```
+
+版本二 : 指定二元操作
+
+```c++
+template <class InputIterator, class OutputIterator, class T, class BinaryOperation>
+OutputIterator __adjacent_difference(InputIterator first, InputIterator last, 
+                                     OutputIterator result, T*,
+                                     BinaryOperation binary_op) {
+  T value = *first;
+  while (++first != last) {
+    T tmp = *first;
+    *++result = binary_op(tmp, value);	
+    value = tmp;
+  }
+  return ++result;
+}
+
+template <class InputIterator, class OutputIterator, class BinaryOperation>
+OutputIterator adjacent_difference(InputIterator first, InputIterator last,
+                                   OutputIterator result,
+                                   BinaryOperation binary_op) {
+  if (first == last) return result;
+  *result = *first;
+  return __adjacent_difference(first, last, result, value_type(first),
+                               binary_op);
+}
+```
+
+实例：
+
+```c++
+struct adjacent{
+	int operator() (const int tmp, const int a) { return tmp - a - a; }
+}adjacent;
+
+int main()
+{
+	int a[4] = {1, 2, 3, 4};
+	int a2[4];
+
+	for(const auto &i : a)
+		cout << i <<  " ";	// 1 2 3 4 
+
+	adjacent_difference(a,  a+4, a2);
+	for(const auto &i : a2)
+		cout << i <<  " ";	// 1 1 1 1
+    
+	partial_sum(a2, a2+4, a2);
+	for(const auto &i : a2)
+		cout << i <<  " ";	// 1 2 3 4 
+    
+	adjacent_difference(a, a+4, a2, adjacent);
+	for(const auto &i : a2)
+		cout << i <<  " ";	// 1 0 -1 -2
+
+	exit(0);
+}
+```
+
+从实例可以看出来 `adjacent_difference`与 `partial_sum`相结合可以恢复。
+
