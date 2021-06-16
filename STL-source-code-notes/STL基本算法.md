@@ -194,8 +194,6 @@ OutputIterator replace_copy_if(Iterator first, Iterator last,
 }
 ```
 
-
-
 ## 基本算法源码剖析
 
 ```c++
