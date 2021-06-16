@@ -8,7 +8,44 @@
 
 本文剖析的源码出自SGL STL中的<stl_algobase.h>文件。
 
-## 基本算法剖析
+这些算法功能实现看似很简单，但是这些算法都能进行衍生，用户自定义， 简单化了我们的部分编程，直接使用无需再定义。
+
+### 基本算法
+
+#### 1、for_each
+
+将[first, last) 范围的元素由传入仿函数(函数)进行处理，最后返回仿函数(函数)。
+
+```c++
+template <class InputIterator, class Function>
+Function for_each(InputIterator first, InputIterator last, Function f) {
+  for ( ; first != last; ++first)
+    f(*first);	// 传入的是右值
+  return f;
+}
+```
+
+实例:
+
+```c++
+void For_each(int i)  { i = 1; }
+
+void For_func(int i) { cout << i << " "; }
+
+int main() {
+	vector<int> a(10);
+	for_each(a.begin(), a.end(), For_each);	// 尝试初始化值
+	for(const auto &i : a)
+		cout << i <<  " ";	// 0 0 0 0 0 0 0 0 0 0
+	for_each(a.begin(), a.end(), For_func);	// 0 0 0 0 0 0 0 0 0 0
+
+	return 0;
+}
+```
+
+很明显尝试初始化值是有问题的，因为`for_each`不会修改传入的值，传入的是右值，所以一般使用`for_each`都是实现迭代器的输出， 这样就不用写for循环再来输出了。
+
+## 基本算法源码剖析
 
 ```c++
 #ifndef __SGI_STL_INTERNAL_ALGOBASE_H
