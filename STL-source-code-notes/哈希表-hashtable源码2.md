@@ -230,10 +230,6 @@ size_type _M_bkt_num_key(const key_type& __key, size_t __n) const
 
 - 由于整个哈希表由vector和链表组成，因此，复制和整体删除，都需要特别注意内存的释放问题
 
-
-
-
-
 ### hash functions
 
 在<stl_hash_fun.h>中定义了一些hash functions，全都是仿函数
