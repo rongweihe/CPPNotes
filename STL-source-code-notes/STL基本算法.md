@@ -93,6 +93,53 @@ ForwardIterator adjacent_find(ForwardIterator first, ForwardIterator last,
 }
 ```
 
+### 4、count
+
+两个版本
+
+版本一 ： 统计 [first, last) 范围出现的指定元素的次数
+
+版本二 ：统计 [first, last) 范围满足条件的元素的次数
+
+```c++
+// 版本一 : 统计[first, last)范围出现的指定元素的次数
+template <class InputIterator, class T, class Size>
+void count(InputIterator first, InputIterator last, const T& value, Size& n) {
+  for ( ; first != last; ++first)
+    if (*first == value)
+      ++n;
+}
+// 版本二 : 统计[first, last)范围满足条件的元素的次数
+template <class InputIterator, class Predicate, class Size>
+void count_if(InputIterator first, InputIterator last, Predicate pred, Size& n) {
+  for ( ; first != last; ++first)
+    if (pred(*first))
+      ++n;
+}
+
+#ifdef __STL_CLASS_PARTIAL_SPECIALIZATION
+// 版本一 : 统计[first, last)范围出现的指定元素的次数
+template <class InputIterator, class T>
+typename iterator_traits<InputIterator>::difference_type
+count(InputIterator first, InputIterator last, const T& value) {
+  typename iterator_traits<InputIterator>::difference_type n = 0;
+  for ( ; first != last; ++first)
+    if (*first == value)
+      ++n;
+  return n;
+}
+// 版本二 : 统计[first, last)范围满足条件的元素的次数
+template <class InputIterator, class Predicate>
+typename iterator_traits<InputIterator>::difference_type
+count_if(InputIterator first, InputIterator last, Predicate pred) {
+  typename iterator_traits<InputIterator>::difference_type n = 0;
+  for ( ; first != last; ++first)
+    if (pred(*first))
+      ++n;
+  return n;
+}
+```
+
 
 
 ## 基本算法源码剖析
