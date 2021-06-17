@@ -220,6 +220,35 @@ inline bool equal(InputIterator1 first1, InputIterator1 last1,
 }
 ```
 
+### 8、fill
+
+将 [first,last) 区间内的所有元素改填新值。
+
+```c++
+template <class ForwardIterator, class T>
+void fill(ForwardIterator first, ForwardIterator last, const T& value) {
+  for ( ; first != last; ++first)
+    *first = value;
+} 
+```
+
+### 9、fill_n
+
+将 [first,last) 区间内的前 n 个元素改填新值，返回的迭代器指向被填入的最后一个元素的下一个位置。
+
+如果操作区间超越了容器大小，就会造成不可预期的结果，解决办法之一是，利用inserter()产生一个具有插入（insert）而非覆写（overwrite）能力的迭代器，inserter()可产生一个用来修饰迭代器的配接器：fill_n(inserter(vec,vec.bengin()),n,value);
+
+```c++
+template <class OutputIterator, class Size, class T>
+OutputIterator fill_n(OutputIterator first, Size n, const T& value) {
+  for ( ; n > 0; --n, ++first)
+    *first = value;
+  return first;
+}
+```
+
+
+
 ## 基本算法源码剖析
 
 ```c++
