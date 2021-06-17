@@ -2,6 +2,13 @@
 
 本文讲解的是 STL 算法中的 permutation 排列组合算法，根据输入序列，排列出下一个排列组合或前一个排列组合。
 
+| 函数                             | 作用                                                |
+| -------------------------------- | --------------------------------------------------- |
+| `next_permutation(beg,end)`      | 取出[`beg`,`end`)内的下一个排列                     |
+| `next_permutation(beg,end,comp)` | 将函数`comp`代替`<`操作符，执行`next_permutation()` |
+| `prev_permutation(beg,end)`      | 取出[`beg`,`end`)内的上一个排列                     |
+| `prev_permutation(beg,end,comp)` | 将函数`comp`代替`<`操作符，执行`prev_permutation()` |
+
 ### 排列组合源码剖析
 
 ```c++
