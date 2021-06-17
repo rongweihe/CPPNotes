@@ -342,7 +342,36 @@ inline const T& min(const T& a, const T& b, Compare comp) {
 }
 ```
 
-### 
+### 14、mismatch
+
+用来平行比较两个序列，指出两者之间的第一个不匹配点，返回一对迭代器，分别指向两序列中的不匹配点。
+
+如果两序列的所有对应元素都匹配，返回的便是两序列各自的 last 迭代器。如果第二个序列比第一个序列小，会发生未可预期的行为。
+
+```c++
+template <class InputIterator1, class InputIterator2>
+pair<InputIterator1, InputIterator2> mismatch(InputIterator1 first1,
+					      InputIterator1 last1,
+					      InputIterator2 first2) {
+  while (first1 != last1 && *first1 == *first2) {
+    ++first1;
+    ++first2;
+  }
+  return pair<InputIterator1, InputIterator2>(first1, first2);
+}
+ 
+template <class InputIterator1, class InputIterator2, class BinaryPredicate>
+pair<InputIterator1, InputIterator2> mismatch(InputIterator1 first1,
+					      InputIterator1 last1,
+					      InputIterator2 first2,
+					      BinaryPredicate binary_pred) {
+  while (first1 != last1 && binary_pred(*first1, *first2)) {
+    ++first1;
+    ++first2;
+  }
+  return pair<InputIterator1, InputIterator2>(first1, first2);
+}
+```
 
 ## 基本算法源码剖析
 
