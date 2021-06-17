@@ -386,7 +386,111 @@ inline void __iter_swap(ForwardIterator1 a, ForwardIterator2 b, T*) {
 }
 ```
 
+### 16、copy（强化效率无所不用其极）
 
+copy 算法可将 [first,last) 内的元素复制到输出区间 [result,result+(last-first))内。
+
+copy 进行的是复制操作，而复制操作不外乎运用 assignment operator 或 copy constructor（copy算法用的是前者），但是某些元素型别拥有的是 trivial assignment operator，因此如果能够使用内存直接复制行为memmove，便能够节省大量时间。
+
+所以 copy 在强化效率无所不用其极，包括函数重载、型别特性、偏特化等编程技巧。
+
+copy 算法是一一进行元素的赋值操作，如果输出区间的起点位于输入区间内，copy 算法便可能会在输入区间的元素尚未被复制之前，就覆盖其值，导致错误结果。
+
+copy 算法的重载版本会根据其所接收的迭代器决定调用 memmove() 来执行任务，就不会造成上述错误，因为memmove() 会先将整个输入区间的内容复制下来，没有被覆盖的危险。
+
+memmove **源码部分是当源内存的首地址等于目标内存的首地址时，不进行任何拷贝；当源内存的首地址大于目标内存的首地址时，实行正向拷贝；当源内存的首地址小于目标内存的首地址时，实行反向拷贝；这样避免了重叠导致的覆盖问题。**
+
+![img](https://img-blog.csdnimg.cn/20201126215528271.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1JldmVuZGVsbA==,size_16,color_FFFFFF,t_70)
+
+```c++
+template <class InputIterator, class OutputIterator>
+inline OutputIterator __copy(InputIterator first, InputIterator last,
+                             OutputIterator result, input_iterator_tag)
+{
+  for ( ; first != last; ++result, ++first)
+    *result = *first;
+  return result;
+}
+ 
+template <class RandomAccessIterator, class OutputIterator, class Distance>
+inline OutputIterator
+__copy_d(RandomAccessIterator first, RandomAccessIterator last,
+         OutputIterator result, Distance*)
+{
+  for (Distance n = last - first; n > 0; --n, ++result, ++first)
+    *result = *first;
+  return result;
+}
+ 
+template <class RandomAccessIterator, class OutputIterator>
+inline OutputIterator
+__copy(RandomAccessIterator first, RandomAccessIterator last,
+       OutputIterator result, random_access_iterator_tag)
+{
+  return __copy_d(first, last, result, distance_type(first));
+}
+ 
+template <class InputIterator, class OutputIterator>
+struct __copy_dispatch
+{
+  OutputIterator operator()(InputIterator first, InputIterator last,
+                            OutputIterator result) {
+    return __copy(first, last, result, iterator_category(first));
+  }
+};
+ 
+#ifdef __STL_CLASS_PARTIAL_SPECIALIZATION
+ 
+template <class T>
+inline T* __copy_t(const T* first, const T* last, T* result, __true_type) {
+  memmove(result, first, sizeof(T) * (last - first));
+  return result + (last - first);
+}
+ 
+template <class T>
+inline T* __copy_t(const T* first, const T* last, T* result, __false_type) {
+  return __copy_d(first, last, result, (ptrdiff_t*) 0);
+}
+ 
+template <class T>
+struct __copy_dispatch<T*, T*>
+{
+  T* operator()(T* first, T* last, T* result) {
+    typedef typename __type_traits<T>::has_trivial_assignment_operator t;
+    return __copy_t(first, last, result, t());
+  }
+};
+ 
+template <class T>
+struct __copy_dispatch<const T*, T*>
+{
+  T* operator()(const T* first, const T* last, T* result) {
+    typedef typename __type_traits<T>::has_trivial_assignment_operator t;
+    return __copy_t(first, last, result, t());
+  }
+};
+ 
+ 
+template <class InputIterator, class OutputIterator>
+inline OutputIterator copy(InputIterator first, InputIterator last,
+                           OutputIterator result)
+{
+  return __copy_dispatch<InputIterator,OutputIterator>()(first, last, result);
+}
+ 
+inline char* copy(const char* first, const char* last, char* result) {
+  memmove(result, first, last - first);
+  return result + (last - first);
+}
+ 
+inline wchar_t* copy(const wchar_t* first, const wchar_t* last,
+                     wchar_t* result) {
+  memmove(result, first, sizeof(wchar_t) * (last - first));
+  return result + (last - first);
+}
+```
+
+参考：https://blog.csdn.net/Revendell/article/details/110150544
 
 ## 基本算法源码剖析
 
