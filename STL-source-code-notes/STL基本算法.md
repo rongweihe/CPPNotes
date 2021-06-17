@@ -247,7 +247,23 @@ OutputIterator fill_n(OutputIterator first, Size n, const T& value) {
 }
 ```
 
+### 10、iter_swap
 
+将两个 ForwardIterators 所指的对象对调。
+
+```c++
+template <class ForwardIterator1, class ForwardIterator2, class T>
+inline void __iter_swap(ForwardIterator1 a, ForwardIterator2 b, T*) {
+  T tmp = *a;
+  *a = *b;
+  *b = tmp;
+}
+ 
+template <class ForwardIterator1, class ForwardIterator2>
+inline void iter_swap(ForwardIterator1 a, ForwardIterator2 b) {
+  __iter_swap(a, b, value_type(a));
+}
+```
 
 ## 基本算法源码剖析
 
