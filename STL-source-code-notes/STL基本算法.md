@@ -398,7 +398,7 @@ copy 算法是一一进行元素的赋值操作，如果输出区间的起点位
 
 copy 算法的重载版本会根据其所接收的迭代器决定调用 memmove() 来执行任务，就不会造成上述错误，因为memmove() 会先将整个输入区间的内容复制下来，没有被覆盖的危险。
 
-memmove **源码部分是当源内存的首地址等于目标内存的首地址时，不进行任何拷贝；当源内存的首地址大于目标内存的首地址时，实行正向拷贝；当源内存的首地址小于目标内存的首地址时，实行反向拷贝；这样避免了重叠导致的覆盖问题。**
+memmove **源码部分是当起始内存的首地址等于目标内存的首地址时，不进行任何拷贝；当起始内存的首地址大于目标内存的首地址时，实行正向拷贝；当起始内存的首地址小于目标内存的首地址时，实行反向拷贝；这样避免了重叠导致的覆盖问题。**
 
 ![img](https://img-blog.csdnimg.cn/20201126215528271.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1JldmVuZGVsbA==,size_16,color_FFFFFF,t_70)
 
@@ -491,6 +491,77 @@ inline wchar_t* copy(const wchar_t* first, const wchar_t* last,
 ```
 
 参考：https://blog.csdn.net/Revendell/article/details/110150544
+
+### 17、copy_backward
+
+copy_backward 算法和 copy 十分相似，将 [first,last) 区间内的每一个元素，以逆向复制到以 result-1 为起点，方向也为逆行的区间上。
+
+copy_backward 所接受的迭代器必须是 BidirectionalIterators 才能够逆行。
+
+```c++
+template <class BidirectionalIterator1, class BidirectionalIterator2>
+inline BidirectionalIterator2 __copy_backward(BidirectionalIterator1 first,
+                                              BidirectionalIterator1 last,
+                                              BidirectionalIterator2 result) {
+  while (first != last) *--result = *--last;
+  return result;
+}
+ 
+ 
+template <class BidirectionalIterator1, class BidirectionalIterator2>
+struct __copy_backward_dispatch
+{
+  BidirectionalIterator2 operator()(BidirectionalIterator1 first,
+                                    BidirectionalIterator1 last,
+                                    BidirectionalIterator2 result) {
+    return __copy_backward(first, last, result);
+  }
+};
+ 
+ 
+template <class T>
+inline T* __copy_backward_t(const T* first, const T* last, T* result,
+                            __true_type) {
+  const ptrdiff_t N = last - first;
+  memmove(result - N, first, sizeof(T) * N);
+  return result - N;
+}
+ 
+template <class T>
+inline T* __copy_backward_t(const T* first, const T* last, T* result,
+                            __false_type) {
+  return __copy_backward(first, last, result);
+}
+ 
+template <class T>
+struct __copy_backward_dispatch<T*, T*>
+{
+  T* operator()(T* first, T* last, T* result) {
+    typedef typename __type_traits<T>::has_trivial_assignment_operator t;
+    return __copy_backward_t(first, last, result, t());
+  }
+};
+ 
+template <class T>
+struct __copy_backward_dispatch<const T*, T*>
+{
+  T* operator()(const T* first, const T* last, T* result) {
+    typedef typename __type_traits<T>::has_trivial_assignment_operator t;
+    return __copy_backward_t(first, last, result, t());
+  }
+};
+ 
+#endif /* __STL_CLASS_PARTIAL_SPECIALIZATION */
+ 
+template <class BidirectionalIterator1, class BidirectionalIterator2>
+inline BidirectionalIterator2 copy_backward(BidirectionalIterator1 first,
+                                            BidirectionalIterator1 last,
+                                            BidirectionalIterator2 result) {
+  return __copy_backward_dispatch<BidirectionalIterator1,
+                                  BidirectionalIterator2>()(first, last,
+                                                            result);
+}
+```
 
 ## 基本算法源码剖析
 
