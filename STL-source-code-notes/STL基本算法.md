@@ -2,11 +2,11 @@
 
 在 STL 中，算法是经常被使用的，算法在整个 STL 中起到非常重要的作用。
 
-本节介绍的是一些基本算法，包含 equal，fill，fill_n，iter_swap，lexicographical_compare，max，min，mismatch，swap，copy，copy_backward，copy_n。
+本节介绍的是一些基本算法，包含 for_each，find，adjacent_find，count，replace，replace_copy，equal，fill，fill_n，iter_swap，lexicographical_compare，max，min，mismatch，swap，copy，copy_backward，copy_n。
 
 其中一个比较重要的算法就是 copy，针对 copy 的剖析在源码中可以看到详细的注解。
 
-本文剖析的源码出自SGL STL中的<stl_algobase.h>文件。
+本文剖析的源码出自 SGL STL 中的 <stl_algobase.h> 文件。
 
 这些算法功能实现看似很简单，但是这些算法都能进行衍生，用户自定义， 简单化了我们的部分编程，直接使用无需再定义。
 
@@ -191,6 +191,32 @@ OutputIterator replace_copy_if(Iterator first, Iterator last,
   for ( ; first != last; ++first, ++result)
     *result = pred(*first) ? new_value : *first;
   return result;
+}
+```
+
+### 7、equal
+
+如果两个序列在 [first,last) 区间内相等，equal() 返回 true，如果第二序列的元素比较多，多出来的元素不予考虑，如果第二序列的元素比第一序列少。
+
+这个算法内部进行迭代行为时，会超越序列的尾端造成不可预测的危险。第一版本缺省采用元素型别所提供的equality 操作符来进行大小比较，第二版本允许我们指定仿函数 pred 作为比较依据。
+
+```c++
+template <class InputIterator1, class InputIterator2>
+inline bool equal(InputIterator1 first1, InputIterator1 last1,
+		  InputIterator2 first2) {
+  for ( ; first1 != last1; ++first1, ++first2)
+    if (*first1 != *first2)
+      return false;
+  return true;
+}
+ 
+template <class InputIterator1, class InputIterator2, class BinaryPredicate>
+inline bool equal(InputIterator1 first1, InputIterator1 last1,
+		  InputIterator2 first2, BinaryPredicate binary_pred) {
+  for ( ; first1 != last1; ++first1, ++first2)
+    if (!binary_pred(*first1, *first2))
+      return false;
+  return true;
 }
 ```
 
