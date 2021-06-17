@@ -265,6 +265,53 @@ inline void iter_swap(ForwardIterator1 a, ForwardIterator2 b) {
 }
 ```
 
+### 11、lexicographical_compare
+
+以字典排列方式对两个序列 [first1,last1) 和 [first2,last2) 进行比较。比较操作针对两序列中的对应位置上的元素进行：
+
+如果第一序列的元素较小，返回 true，否则返回 false。
+如果到达 last1 而尚未到达 last2，返回 true。
+如果到达 last2 而尚未到达 last1，返回 false。
+如果同时到达 last1 和 last2，两个序列完全相等，返回 false 。
+
+```c++
+template <class InputIterator1, class InputIterator2>
+bool lexicographical_compare(InputIterator1 first1, InputIterator1 last1,
+			     InputIterator2 first2, InputIterator2 last2) {
+  for ( ; first1 != last1 && first2 != last2; ++first1, ++first2) {
+    if (*first1 < *first2)
+      return true;
+    if (*first2 < *first1)
+      return false;
+  }
+  return first1 == last1 && first2 != last2;
+}
+ 
+template <class InputIterator1, class InputIterator2, class Compare>
+bool lexicographical_compare(InputIterator1 first1, InputIterator1 last1,
+			     InputIterator2 first2, InputIterator2 last2,
+			     Compare comp) {
+  for ( ; first1 != last1 && first2 != last2; ++first1, ++first2) {
+    if (comp(*first1, *first2))
+      return true;
+    if (comp(*first2, *first1))
+      return false;
+  }
+  return first1 == last1 && first2 != last2;
+}
+//特化版本，对于原生指针const unsigned char*
+inline bool
+lexicographical_compare(const unsigned char* first1,
+                        const unsigned char* last1,
+                        const unsigned char* first2,
+                        const unsigned char* last2) {
+  const size_t len1 = last1 - first1;
+  const size_t len2 = last2 - first2;
+  const int result = memcmp(first1, first2, min(len1, len2));
+  return result != 0 ? result < 0 : len1 < len2;
+}
+```
+
 ## 基本算法源码剖析
 
 ```c++
