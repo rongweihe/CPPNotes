@@ -373,6 +373,21 @@ pair<InputIterator1, InputIterator2> mismatch(InputIterator1 first1,
 }
 ```
 
+### 15、swap
+
+用来交换两个对象的内容。
+
+```c++
+template <class ForwardIterator1, class ForwardIterator2, class T>
+inline void __iter_swap(ForwardIterator1 a, ForwardIterator2 b, T*) {
+  T tmp = *a;
+  *a = *b;
+  *b = tmp;
+}
+```
+
+
+
 ## 基本算法源码剖析
 
 ```c++
