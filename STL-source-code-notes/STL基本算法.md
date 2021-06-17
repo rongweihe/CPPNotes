@@ -312,6 +312,38 @@ lexicographical_compare(const unsigned char* first1,
 }
 ```
 
+### 12、max
+
+取两个对象中的较大值。
+
+```c++
+template <class T>
+inline const T& max(const T& a, const T& b) {
+  return  a < b ? b : a;
+}
+template <class T, class Compare>
+inline const T& max(const T& a, const T& b, Compare comp) {
+  return comp(a, b) ? b : a;
+}
+```
+
+### 13、min
+
+取两个对象中的较小值。
+
+```c++
+template <class T>
+inline const T& min(const T& a, const T& b) {
+  return b < a ? b : a;
+}
+template <class T, class Compare>
+inline const T& min(const T& a, const T& b, Compare comp) {
+  return comp(b, a) ? b : a;
+}
+```
+
+### 
+
 ## 基本算法源码剖析
 
 ```c++
