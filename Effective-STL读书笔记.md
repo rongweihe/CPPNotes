@@ -135,4 +135,33 @@ iterator container::erase(iterator begin, iterator end);
 void container::erase(iterator begin, iterator end);
 void container::assign(iterator begin, iterator end);
 ```
+## 第六条：当心 C++ 编译器最烦人的分析机制
 
+```c++
+// 注意：围绕参数名的括号(比如对f2中d)与独立的括号的区别：围绕参数名的括号被忽略，而独立的括号则表明参数
+// 列表的存在：它们说明存在一个函数指针参数
+int f1(double d); // 声明了一个带double参数并返回int的函数
+int f2(double(d)); // 同上，d两边的括号被忽略,可以给参数名加上圆括号
+int f3(double); // 同上，参数名被忽略
+ 
+int g1(double(*pf)()); // 参数是一个指向不带任何参数的函数的指针，该函数返回double值；g1以指向函数的指针为参数
+int g2(double pf()); // 同上，pf为隐式指针
+int g3(double()); // 同上，省去参数名
+ 
+int test_item_6()
+{
+	// 把一个存有整数(int)的文件ints.dat拷贝到一个list中
+	std::ifstream dataFile("ints.dat");
+	std::list<int> data1(std::istream_iterator<int>(dataFile), std::istream_iterator<int>()); // 小心，结果不会是你所想象的那样
+ 
+	std::list<int> data2((std::istream_iterator<int>(dataFile)), std::istream_iterator<int>()); // 正确，注意list构造函数的第一个参数两边的括号
+ 
+	std::istream_iterator<int> dataBegin(dataFile);
+	std::istream_iterator<int> dataEnd;
+	std::list<int> data3(dataBegin, dataEnd); // 正确
+ 
+	return 0;
+}
+```
+
+使用命名的迭代器对象与通常的STL程序风格相违背，但你或许觉得为了使代码对所有编译器都没有二义性，并且使维护代码的人理解起来更容易，这一代价是值得的。
