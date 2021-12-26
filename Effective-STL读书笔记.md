@@ -80,3 +80,59 @@ if (c.empty()) {}
 
 那既然如此，为何建议使用 empty 优先级于 size()，原因在于：empty 对所有的标准容器都是常数时间操作，而对一些 list 实现，size 函数耗费线性时间。（比如 list 容器的 splice 函数）。
   
+## 第五条：区间成员函数优先于与之对应的单元素成员函数
+
+```c++
+class Widget5 {};
+ 
+int test_item_5()
+{
+	std::vector<Widget5> v1, v2;
+	v1.assign(v2.begin() + v2.size() / 2, v2.end()); // 推荐
+ 
+	v1.clear();
+	for (std::vector<Widget5>::const_iterator ci = v2.begin() + v2.size() / 2; ci != v2.end(); ++ci) // 不推荐
+		v1.push_back(*ci);
+ 
+	v1.clear();
+	std::copy(v2.begin() + v2.size() / 2, v2.end(), std::back_inserter(v1)); // 效率不如assign
+ 
+	v1.clear();
+	v1.insert(v1.end(), v2.begin() + v2.size() / 2, v2.end()); // 对copy的调用可以被替换为利用区间的insert版本
+ 
+	const int numValues = 100;
+	int data[numValues];
+ 
+	std::vector<int> v;
+	v.insert(v.begin(), data, data + numValues); // 推荐，使用区间成员函数insert
+ 
+	std::vector<int>::iterator insertLoc(v.begin());
+	for (int i = 0; i < numValues; ++i) {
+		insertLoc = v.insert(insertLoc, data[i]); // 不推荐，使用单元素成员函数
+		++insertLoc;
+	}
+ 
+	return 0;
+}
+```
+
+区间成员函数是指这样的一类成员函数，它们像 STL 算法一样，使用两个迭代器参数来确定该成员操作所执行的区间。如果不使用区间成员函数就得写一个显示的循环。
+
+优点在于：
+
+- C++ 标准要求区间insert 函数把现有容器中元素直接移动到它们最终的位置上，即只需要付出每个元素移动一次的代价。
+- 明智地使用区间插入而不是单元素重复插入会提高程序的性能问题，比如对于vector来说如果内存已满再插入新元素会触发两倍扩容，区间插入不必多次重新分配内存。
+- 区间成员函数减少代码量，形成更易懂的代码，增强软件长期可维护性。
+
+那么，都有哪些区间成员函数？
+
+- 区间创建函数、insert、erase、assign等。
+
+```c++
+container::container(InputIterator begin, InputIterator end);//区间
+void container::container(iterator position, InputIterator begin, InputIterator end);
+iterator container::erase(iterator begin, iterator end);
+void container::erase(iterator begin, iterator end);
+void container::assign(iterator begin, iterator end);
+```
+
