@@ -165,3 +165,44 @@ int test_item_6()
 ```
 
 使用命名的迭代器对象与通常的STL程序风格相违背，但你或许觉得为了使代码对所有编译器都没有二义性，并且使维护代码的人理解起来更容易，这一代价是值得的。
+		
+## 第七条：如果容器中包含了通过 new 操作创建的指针，切记在容器对象析构前将指针 delete 掉
+
+```c++
+class Widget7 {};
+ 
+struct DeleteObject {
+	template<typename T>
+	void operator()(const T* ptr) const
+	{
+		delete ptr;
+	}
+};
+ 
+int test_item_7()
+{
+	const int num = 5;
+ 
+	std::vector<Widget7*> vwp1, vwp2;
+	for (int i = 0; i < num; ++i) {
+		vwp1.push_back(new Widget7); // 如果在后面自己不delete，使用vwp在这里发生了Widget7的泄露
+		vwp2.push_back(new Widget7);
+	}
+ 
+	for (std::vector<Widget7*>::iterator i = vwp1.begin(); i != vwp1.end(); ++i) {
+		delete *i; // 能行，但不是异常安全的
+	}
+ 
+	for_each(vwp2.begin(), vwp2.end(), DeleteObject()); // 正确，类型安全，但仍不是异常安全的
+ 
+	typedef std::shared_ptr<Widget7> SPW; // SPW"指向Widget7的shared_ptr"
+	std::vector<SPW> vwp3;
+	for (int i = 0; i < num; ++i) {
+		vwp3.push_back(SPW(new Widget7)); // 从Widget7创建SPW,然后对它进行一次push_back使用vwp3,这里不会有Widget7泄露，即使有异常被抛出
+	}
+ 
+	return 0;
+}
+```
+
+STL 容器很智能，但没有智能到知道是否该删除自己所包含的指针的程度。当你使用指针的容器，而其中的指针应该被删除时，为了避免资源泄漏，你必须或者用引用计数形式的智能指针对象(比如std::shared_ptr)代替指针，或者当容器被析构时手工删除其中的每个指针。
