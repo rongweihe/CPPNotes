@@ -278,3 +278,54 @@ int test_item_9()
 - 千万别让你的分配子拥有随对象而不同的状态(per-object state)。通常，分配子不应该有非静态的数据成员。*
 - 记住，传给分配子的 allocate 成员函数的是那些要求内存的对象的个数，而不是所需的字节数。同时要记住，这些函数返回T*指针(通过pointer类型定义)，即使尚未有T对象被构造出来。
 - 一定要提供嵌套的 rebind 模板，因为标准容器依赖该模板。
+	
+## 第 11 条：理解并自定义分配子的合理用法
+
+看一段代码
+
+```c++
+
+void* mallocShared(size_t bytesNeed) {
+    return malloc(bytesNeed);
+}
+void freeShared(void* ptr) {
+    free(ptr);
+}
+
+template<typename T>
+class SharedMemoryAllocator {
+public:
+    typedef T* pointer;//pointer是个类型定义，它实际上总是T*
+    typedef size_t size_type; //通常情况下，size_type 是 size_t 的一个类型定义
+    typedef T value_type;
+
+    pointer allocate(size_type numObj, const void* localHint = 0) {
+        return static_cast<pointer>(mallocShared(numObj * sizeof(T)));
+    }
+    void deallocate(pointer ptrToMemory, size_type numObj) {
+		freeShared(ptrToMemory);
+	}
+    template<typename U>
+	struct rebind {
+		typedef std::allocator<U> other;
+	};
+};
+
+int test_item_11() {
+	typedef std::vector<double, SharedMemoryAllocator<double>> SharedDoubleVec;
+	// v所分配的用来容纳其元素的内存将来自共享内存
+	// 而v自己----包括它所有的数据成员----几乎肯定不会位于共享内存中，v只是普通的基于栈(stack)的对象，所以，像所有基于栈的对象一样，它将会被运行时系统放在任意可能的位置上。这个位置几乎肯定不是共享内存
+	SharedDoubleVec v; // 创建一个vector,其元素位于共享内存中
+ 
+	// 为了把v的内容和v自身都放到共享内存中，需要这样做
+	void* pVectorMemory = mallocShared(sizeof(SharedDoubleVec)); // 为SharedDoubleVec对象分配足够的内存
+	SharedDoubleVec* pv = new (pVectorMemory)SharedDoubleVec; // 使用"placement new"在内存中创建一个SharedDoubleVec对象
+	// ... // 使用对象(通过pv)
+	pv->~SharedDoubleVec(); // 析构共享内存中的对象
+	freeShared(pVectorMemory); // 释放最初分配的那一块共享内存
+ 
+	return 0;
+}
+
+```
+遵守同一类型的分配子必须是等价的这一限制要求。
