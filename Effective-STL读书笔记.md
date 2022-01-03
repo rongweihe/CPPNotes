@@ -887,3 +887,9 @@ int test_item_33() {
 要求排序区间的STL算法：binaray_search、lower_bound、upper_bound、equal_range、set_union、set_intersection、set_difference、set_symmetric_difference、merge、inplace_merge、includes。
 
 unique、unique_copy并不一定要求排序的区间，但通常情况下会与排序区间一起使用。
+
+## 第 35 条：通过 mismatch 或 lexicographical_compare 实现简单的忽略大小写的字符串比较
+
+std::lexicographical_compare是strcmp的一个泛化版本。不过，strcmp只能与字符数组一起工作，而lexicographical_compare则可以与任何类型的值的区间一起工作。而且，strcmp总是通过比较两个字符来判断它们的关系相等、小于还是大于，而lexicographical_compare则可以接受一个判别式，由该判别式来决定两个值是否满足一个用户自定义的准则。
+
+strcmp通常是被优化过的，它们在字符串的处理上一般要比通用算法mismatch和lexicographical_compare快。
