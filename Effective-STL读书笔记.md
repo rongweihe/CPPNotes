@@ -634,3 +634,11 @@ C++11 中新增了四种关联容器，使用哈希函数组织的，即 unorder
 - unordered_set：底层为哈希表，无序，不重复；unordered_multiset：底层为哈希表，无序，可重复
 
 - unordered_map：底层为哈希表，无序，不重复；unordered_multiap：底层为哈希表，无序，可重复
+	
+## 第 26 条：iterator 优先于 const_iterator、reverse_iterator 以及 const_reverse_iterator
+STL 中的所有标准容器都提供了 4 种迭代器类型。
+
+对容器类 container<T> 而言，iterator 类型的功效相当于 T*，而 const_iterator 则相当于 const T*。对一个 iterator 或者 const_iterator 进行递增则可以移动到容器中的下一个元素，通过这种方式可以从容器的头部一直遍历到尾部。reverse_iterator 与 const_reverse_iterator 同样分别对应于 T*和const T*，所不同的是，对这两个迭代器进行递增的效果是由容器的尾部反向遍历到容器头部。
+
+注意：vector::insert，对于 C++98 中，第一个参数均为 iterator；而对于 C++11中，第一个参数均为 const_iterator。vector::erase 的情况也是这样。
+
