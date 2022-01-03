@@ -893,3 +893,19 @@ unique、unique_copy并不一定要求排序的区间，但通常情况下会与
 std::lexicographical_compare是strcmp的一个泛化版本。不过，strcmp只能与字符数组一起工作，而lexicographical_compare则可以与任何类型的值的区间一起工作。而且，strcmp总是通过比较两个字符来判断它们的关系相等、小于还是大于，而lexicographical_compare则可以接受一个判别式，由该判别式来决定两个值是否满足一个用户自定义的准则。
 
 strcmp通常是被优化过的，它们在字符串的处理上一般要比通用算法mismatch和lexicographical_compare快。
+
+## 第 36 条: 理解copy_if算法的正确实现
+```c++
+int test_item_36() {
+	std::vector<int> v1{ 1, 2, 3, 4, 5 }, v2(v1.size());
+ 
+	auto it = std::copy_if(v1.begin(), v1.end(), v2.begin(), [](int i) { return (i % 2 == 1); });
+	v2.resize(std::distance(v2.begin(), it));
+ 
+	for (const auto& v : v2)
+		fprintf(stdout, "%d\n", v); // 1 3 5
+ 
+	return 0;
+}
+```
+C++11 中增加了 std::copy_if 函数。拷贝带条件判断的算法。
