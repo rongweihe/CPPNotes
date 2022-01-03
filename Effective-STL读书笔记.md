@@ -583,4 +583,3 @@ int test_item_22() {
 对于 map 和 multimap 尤其简单，因为如果有程序试图改变这些容器中的键，它将不能通过编译。这是因为，对于一个 map<K, V>或 multimap<K, V> 类型的对象，其中的元素类型是 pair<const K, V>。因为键的类型是 const K，所以它不能被修改。(如果利用 const_cast，你或许可以修改它。)
 
 对于 set<T> 或 multiset<T> 类型的对象，容器中元素的类型是 T，而不是 const T。注：不通过强制类型转换并不能改变 set 或 multiset 中的元素。
-
