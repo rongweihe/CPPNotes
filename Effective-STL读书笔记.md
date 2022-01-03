@@ -593,3 +593,33 @@ int test_item_22() {
 - 重组阶段：改变数据结构的内容。
 
 这种方式使用其数据结构的应用程序来说，排序的 vector 可能比管理容器提供了更好的性能。
+	
+## 第 24 条：当效率至关重要的时候，请在 map::operator[] 和 map::insert 之间作慎重选择
+
+### 当做“添加”操作时，insert 效率比 operator[] 更高
+
+map::operator[] 工作原理
+
+operator[] 返回一个引用，它指向与 k 相关联的值对象。然后 v 被赋给了该引用所指向的对象。如果键 k 已经有了相关联的值，则该值被更新。如果 k 还没有在映射表中，那就没有 operator[] 可以指向的值对象，这种情况下，它使用值类型的默认构造函数创建一个新的对象，然后 operator[] 就能返回一个指向该新对象的引用。
+
+看一个样例：
+
+```c++
+std::map<int, Widget> m;
+m[1] = 5.13
+```
+
+表达式 m[1] 是 m.operator[](1) 的缩写形式，所以这是对 map::operator[] 的调用。该函数必须返回一个指向 Widget 的引用，因为 m 所映射的值对象类型是 Widget。这时候 m 中什么也没有，所以键 1 没有多余的值对象。因此，operator[]默认构造了一个 Widget，作为 1 相关联的值，然后返回一个指向 Widget 的引用，最后，这个 Widget 赋值为 5.13
+
+而如果直接用
+```c++
+m.insert(Widget::value_type(1,5.13))
+```
+这样直接用我们所需的值构造了一个 Widget 比 ”先默认构造一个 Widget在赋值“ 效率更高。
+
+与之相比，通常节省了三个函数调用：一个用于创建默认构造的临时 Widget 对象，一个用以析构该临时对象，一个是调用 Widget 的赋值操作符。
+
+### 当做“更新”操作时，operator[] 效率比 insert 更高
+
+原因在于 insert 调用需要一个 Widget::value_type 类型的参数（pair<int,Widget>），所以当我们调用 insert 时候，必须构造和析构一个该类型的对象，这样付出一个 pair 构造函数和一个 pair 析构函数的代价。而这又会导致 Widget 的构造和析构，因为 pair<int,Widget> 本身包含了一个 Widget 对象，而 operator[] 不使用 pair 对象，所以它不会构造和析构任何 pair 和 Widget
+
