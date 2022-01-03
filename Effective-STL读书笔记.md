@@ -1012,3 +1012,8 @@ std::mem_fun_ref：将成员函数转换为函数对象(引用版本)。
 ## 第 44 条: 容器的成员函数优先于同名的算法
 
 有些STL容器提供了一些与算法同名的成员函数。比如，关联容器提供了count、find、lower_bound、upper_bound和equal_range，而list则提供了remove、remove_if、unique、sort、merge和reverse。大多数情况下，你应该使用这些成员函数，而不是相应的STL算法。这里有两个理由：第一，成员函数往往速度快；第二，成员函数通常与容器(特别是关联容器)结合得更加紧密，这是算法所不能比的。原因在于，算法和成员函数虽然有同样的名称，但是它们所做的事情往往不完全相同。
+
+## 第 45 条: 正确区分count、find、binary_search、lower_bound、upper_bound和equal_range
+
+如果区间是排序的，那么通过binary_search、lower_bound、upper_bound和equal_range，你可以获得更快的查找速度(通常是对数时间的效率)。
+如果迭代器并没有指定一个排序的区间，那么你的选择范围将局限于count、count_if、find以及find_if，而这些算法仅能提供线性时间的效率。 
