@@ -702,3 +702,44 @@ int test_item_29() {
 ```
 std::istream_iterator<char>对象使用operator>>从输入流中读取单个字符，而std::istreambuf_iterator<char>则直接从流的缓冲区中读取下一个字符。std::istreambuf_iterator不会跳过任何字符，它只是简单地取回流缓冲区中的下一个字符，而不管它们是什么字符，因此用不着清除输入流的skipws标志。
 
+## 第 30 条：确保目标区间足够大
+
+需求1：希望像 transform 这样的算法把结果以新元素的形式插入到容器末尾开始。
+
+```c++
+int transmogrify(int x) { return (x + 1); }
+ 
+int test_item_30() {
+	std::vector<int> values{ 1, 2, 3 };
+	std::vector<int> results;
+	results.reserve(results.size() + values.size()); // 可避免内存的重新分配
+	//std::transform(values.cbegin(), values.cend(), results.end(), transmogrify); // 错误，segmentation fault
+	std::transform(values.cbegin(), values.cend(), std::back_inserter(results), transmogrify); // 正确 {2,4,6}
+	// 在内部，std::back_inserter返回的迭代器将使得push_back被调用，所以back_inserter可适用于所有提供了push_back方法的容器
+ 
+	std::list<int> results2;
+	std::transform(values.cbegin(), values.cend(), std::front_inserter(results2), transmogrify);
+	// std::front_inserter在内部利用了push_front，所以front_inserter仅适用于那些提供了push_front成员函数的容器
+ 
+	return 0;
+}
+```
+
+需求2：假设希望 transform 这样的算法覆盖容器中已有的元素，那么就需要确保 result 已有的元素至少和 values 的元素一样多。否则，就必须使用 resize 来保证这一点
+
+```c++
+std::vector<int> values;
+std::vector<int> results;
+...
+
+if (results.size() < values.size()) {
+	results.resize(values.size());//确保size一样大
+}
+std::transform(values.begin(), values.end(),results.begin(), fun);//覆盖 results 中前 values.size() 的元素
+或者，也可以先清空 results 然后按照普通的方式使用一个插入行迭代器
+
+results.clear();
+results.reserve(values.size());
+std::transform(values.begin(), values.end(), std::back_inserter(results), fun);//覆盖 results 中前 values.size() 的元素
+
+无论何时，如果所使用的算法需要指定一个目标区间，那么必须确保目标区间足够大，或者确保它会随着算法的运行而增大。要在算法执行过程中增大目标区间，请使用插入型迭代器，比如ostream_iterator或者由back_inserter、front_inserter和inserter返回的迭代器。
