@@ -642,3 +642,22 @@ STL 中的所有标准容器都提供了 4 种迭代器类型。
 
 注意：vector::insert，对于 C++98 中，第一个参数均为 iterator；而对于 C++11中，第一个参数均为 const_iterator。vector::erase 的情况也是这样。
 
+## 第 27 条： 使用 distance 和 advance 将容器的 const_iterator 转换成 iterator
+
+```c++
+int test_item_27() {
+	typedef std::deque<int> IntDeque;
+	typedef IntDeque::iterator Iter;
+	typedef IntDeque::const_iterator ConstIter;
+ 
+	IntDeque d(5, 10);
+	ConstIter ci;
+	ci = d.cbegin() + 1; // 使ci指向d
+	Iter i(d.begin());
+	std::advance(i, std::distance<ConstIter>(i, ci));
+ 
+	return 0;
+}
+```
+std::distance 用以取得两个迭代器(它们指向同一个容器)之间的距离；std::advance 则用于将一个迭代器移动指定的距离。
+
