@@ -1060,3 +1060,18 @@ C++标准与C的标准有所不同，它没有规定标准库中的头文件之�
 
 任何时候如果你使用了某个头文件中的一个STL组件，那么你就一定要提供对应的#include指令，即使你正在使用的STL平台允许你省略#include指令，你也要将它们包含到你的代码中。当你需要将代码移植到其它平台上的时候，移植的压力就会减轻。
  
+## 第 49 条: 学会分析与STL相关的编译器诊断信息
+
+一些技巧：
+
+- vector和string的迭代器通常就是指针，所以当错误地使用了iterator的时候，编译器的诊断信息中可能会引用到指针类型。例如，如果源代码中引用了vector<double>::iterator，那么编译器的诊断信息中极有可能就会提及double*指针。
+
+- 如果诊断信息中提到了back_insert_iterator、front_insert_iterator或者insert_iterator，则几乎总是意味着你错误地调用了back_inserter、front_inserter或者inserter。如果你并没有直接调用这些函数，则一定是你所调用的某个函数直接或者间接地调用了这些函数。
+
+- 类似地，如果诊断信息中提到了binder1st或者binder2nd，那么你可能是错误地使用了bind1st和bind2nd。
+
+- 输出迭代器(如ostream_iterator、ostreambuf_iterator以及那些由back_inserter、front_inserter、front_inserter和inserter函数返回的迭代器)在赋值操作符内部完成其输出或者插入工作，所以，如果在使用这些迭代器的时候犯了错误，那么你所看到的错误消息中可能会提到与赋值操作符有关的内容。
+
+- 如果你得到的错误消息来源于某一个STL算法的内部实现(例如，引起错误的源代码在<algorithm>中)，那也许是你在调用算法的时候使用了错误的类型。例如，你可能使用了不恰当的迭代器类型。
+
+- 如果你正在使用一个很常见的STL组件，比如vector、string或者for_each算法，但是从错误消息来看，编译器好像对此一无所知，那么可能是你没有包含相应的头文件。
