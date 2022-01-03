@@ -686,3 +686,19 @@ int test_item_28() {
 ```
 如果要在一个reverse_iterator ri指定的位置上插入新元素，则只需在ri.base()位置处插入元素即可。对于插入操作而言，ri和ri.base()是等价的，ri.base()是真正与ri对应的iterator。
 如果要在一个reverse_iterator ri指定的位置上删除一个元素，则需要在ri.base()前面的位置上执行删除操作。对于删除操作而言，ri和ri.base()是不等价的，ri.base()不是与ri对应的iterator。
+			      
+## 第 29 条：对于逐个字符的输入请考虑使用 istreambuf_iterator
+```c++
+int test_item_29() {
+	// 把一个文本文件的内容拷贝到一个string对象中
+	std::ifstream inputFile("interestingData.txt");
+	inputFile.unsetf(std::ios::skipws); // 禁止忽略inputFile中的空格
+	std::string fileData((std::istream_iterator<char>(inputFile)), std::istream_iterator<char>()); // 速度慢
+ 
+	std::string fileData2((std::istreambuf_iterator<char>(inputFile)), std::istreambuf_iterator<char>()); // 速度快
+ 
+	return 0;
+}
+```
+std::istream_iterator<char>对象使用operator>>从输入流中读取单个字符，而std::istreambuf_iterator<char>则直接从流的缓冲区中读取下一个字符。std::istreambuf_iterator不会跳过任何字符，它只是简单地取回流缓冲区中的下一个字符，而不管它们是什么字符，因此用不着清除输入流的skipws标志。
+
