@@ -730,8 +730,7 @@ int test_item_30() {
 ```c++
 std::vector<int> values;
 std::vector<int> results;
-...
-
+//...
 if (results.size() < values.size()) {
 	results.resize(values.size());//确保size一样大
 }
@@ -744,7 +743,7 @@ std::transform(values.begin(), values.end(), std::back_inserter(results), fun);/
 
 无论何时，如果所使用的算法需要指定一个目标区间，那么必须确保目标区间足够大，或者确保它会随着算法的运行而增大。要在算法执行过程中增大目标区间，请使用插入型迭代器，比如ostream_iterator或者由back_inserter、front_inserter和inserter返回的迭代器。
 
-				   
+
 ## 第 31 条：了解各种与排序有关的选择
 
 ```c++
