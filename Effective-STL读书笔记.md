@@ -743,3 +743,59 @@ results.reserve(values.size());
 std::transform(values.begin(), values.end(), std::back_inserter(results), fun);//覆盖 results 中前 values.size() 的元素
 
 无论何时，如果所使用的算法需要指定一个目标区间，那么必须确保目标区间足够大，或者确保它会随着算法的运行而增大。要在算法执行过程中增大目标区间，请使用插入型迭代器，比如ostream_iterator或者由back_inserter、front_inserter和inserter返回的迭代器。
+
+				   
+## 第 31 条：了解各种与排序有关的选择
+
+```c++
+bool qualityCompare(const std::string& lhs, const std::string& rhs) {
+	return (lhs < rhs);
+}
+ 
+bool hasAcceptableQuality(const std::string& w) {
+	return true; // 判断w的质量值是否为2或者更好
+}
+ 
+int test_item_31() {
+	std::vector<std::string> vec(50, "xxx");
+	std::partial_sort(vec.begin(), vec.begin() + 20, vec.end(), qualityCompare); // 将质量最好的20个元素顺序放在vec的前20个位置上
+ 
+	std::nth_element(vec.begin(), vec.begin() + 19, vec.end(), qualityCompare); // 将最好的20个元素放在vec的前部，但并不关心它们的具体排列顺序
+ 
+	// std::partia_sort和std::nth_element在效果上唯一不同之处在于：partial_sort对位置1--20中的元素进行了排序，而
+	// nth_element没有对它们进行排序。然而，这两个算法都将质量最好的20个vec放到了矢量的前部
+ 
+	std::vector<std::string>::iterator begin(vec.begin());
+	std::vector<std::string>::iterator end(vec.end());
+	std::vector<std::string>::iterator goalPosition; // 用于定位感兴趣的元素
+	// 找到具有中间质量级别的string
+	goalPosition = begin + vec.size() / 2; // 如果全排序的话，待查找的string应该位于中间
+	std::nth_element(begin, goalPosition, end, qualityCompare); // 找到vec的中间质量值
+	// 现在goalPosition所指的元素具有中间质量
+ 
+	// 找到区间中具有75%质量的元素
+	std::vector<std::string>::size_type goalOffset = 0.25 * vec.size(); // 找出如果全排序的话，待查找的string离起始处有多远
+	std::nth_element(begin, begin + goalOffset, end, qualityCompare); // 找到75%处的质量值	
+ 
+	// 将满足hasAcceptableQuality的所有元素移到前部，然后返回一个迭代器，指向第一个不满足条件的string
+	std::vector<std::string>::iterator goodEnd = std::partition(vec.begin(), vec.end(), hasAcceptableQuality);
+ 
+	return 0;
+}
+```
+- std::nth_element：用于排序一个区间，它使得位置n上的元素正好是全排序情况下的第n个元素。而且，当nth_element返回的时候，所有按全排序规则(即sort的结果)排在位置n之前的元素也都被排在位置n之前，而所有按全排序规则排在位置n之后的元素则都被排在位置n之后。
+
+- std::partial_sort和std::nth_element在排列等价元素的时候，有它们自己的做法，你无法控制它们的行为。
+
+- std::partial_sort、std::nth_element和std::sort都属于非稳定的排序算法，但是有一个名为std::stable_sort的算法可以提供稳定排序特性。
+
+- std::nth_element除了可以用来找到排名在前的n个元素以外，它还可以用来找到一个区间的中间值，或者找到某个特定百分比上的值。
+
+- std::partition：可以把所有满足某个特定条件的元素放在区间的前部。 
+
+总结排序选择：
+- 如果需要对 vector、string、deque 或者数组中的元素执行一次完全排序，那么可以使用sort或者stable_sort。
+- 如果有一个 vector、string、deque 或者数组，并且只需要对等价性最前面的n个元素进行排序，那么可以使用partial_sort。
+- 如果有一个 vector、string、deque 或者数组，并且需要找到第n个位置上的元素，或者，需要找到等价性前面的n个元素但又不必对这n个元素进行排序，那么，nth_element正是你所需要的函数。
+- 如果需要将一个标准序列容器中的元素按照是否满足某个特定的条件区分开来，那么，partition 和 stable_partition 可能正是你所需要的。
+- 如果你的数据在一个 list，那么你仍然可以直接调用 partition 和 stable_partition 算法；你可以用 list::sort 来替代 sort 和 stable_sort 算法。但是，如果你需要获得 partial_sort 或 nth_element 算法的效果，那么，你可以有一些间接的途径来完成这项任务。
