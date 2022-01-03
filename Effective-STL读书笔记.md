@@ -1075,3 +1075,18 @@ C++标准与C的标准有所不同，它没有规定标准库中的头文件之�
 - 如果你得到的错误消息来源于某一个STL算法的内部实现(例如，引起错误的源代码在<algorithm>中)，那也许是你在调用算法的时候使用了错误的类型。例如，你可能使用了不恰当的迭代器类型。
 
 - 如果你正在使用一个很常见的STL组件，比如vector、string或者for_each算法，但是从错误消息来看，编译器好像对此一无所知，那么可能是你没有包含相应的头文件。
+
+## 第 50 条: 熟悉与 STL 相关的 Web 站点
+
+书中介绍了SGI STL(已废弃)、STLport、Boost。
+
+个人强烈推荐：http://www.cplusplus.com/ 尤其是其中的 Reference(http://www.cplusplus.com/reference/)
+
+如果 有时 cplusplus 网站打不开，此时也可参考cppreference：https://en.cppreference.com/w/cpp
+
+
+部分参考：https://blog.csdn.net/fengbingchun/article/details/103223914
+
+完。
+	2022/01/03
+	by@herongwei
