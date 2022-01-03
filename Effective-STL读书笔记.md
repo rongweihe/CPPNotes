@@ -557,3 +557,30 @@ while (__comp(*__first, __pivot))
 其中，__first 为迭代器，__pivot 为中间值，__comp 为传入的比较函数。
 如果传入的 vector 中，按照之前的写法 >= 元素完全相等的情况下那么 __comp 比较函数一直是 true，那么后面 ++__first，最终就会使得迭代器失效，从而导致 coredump。
 至此，分析完毕，请记住，STL sort 自定义比较函数，总是对相同值的比较返回 false。
+	
+	
+## 第 22 条：切勿直接修改 set 或 multiset 中的键
+```c++
+int test_item_22() {
+	std::map<int, std::string> m{ { 0, "xxx" } };
+	//m.begin()->first = 10; // build error, map的键不能修改
+ 
+	std::multimap<int, std::string> mm{ { 1, "yyy" } };
+	//mm.begin()->first = 10; // build error, multimap的键同样不能修改
+ 
+	std::set<int> s{ 1, 2, 3 };
+	//*(s.begin()) = 10; // build error, set的键不能修改
+	const_cast<int&>(*s.begin()) = 10; // 强制类型转换
+ 
+	std::vector<int> v{ 1, 2, 3 };
+	*v.begin() = 10;
+ 
+	return 0;
+}
+```
+像所有的标准关联容器一样，set 和 multiset 按照一定的顺序来存放自己的元素，而这些容器的正确行为也是建立在其元素保持有序的基础之上的。如果你把关联容器中的一个元素的值改变了(比如把10改为1000)，那么，新的值可能不在正确的位置上，这将会打破容器的有序性。
+
+对于 map 和 multimap 尤其简单，因为如果有程序试图改变这些容器中的键，它将不能通过编译。这是因为，对于一个 map<K, V>或 multimap<K, V> 类型的对象，其中的元素类型是 pair<const K, V>。因为键的类型是 const K，所以它不能被修改。(如果利用 const_cast，你或许可以修改它。)
+
+对于 set<T> 或 multiset<T> 类型的对象，容器中元素的类型是 T，而不是 const T。注：不通过强制类型转换并不能改变 set 或 multiset 中的元素。
+
