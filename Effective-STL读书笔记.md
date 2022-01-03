@@ -879,3 +879,11 @@ int test_item_33() {
 ```
 当容器中存放的是指向动态分配的对象的指针的时候，应该避免使用remove和类似的算法(remove_if和unique)。
 如果容器中存放的不是普通指针，而是具有引用计数功能的智能指针，那么就可以直接使用erase-remove的习惯用法。
+
+## 第 34 条：了解哪些算法要求使用排序的区间作为参数
+
+并非所有的算法都可以应用于任何区间。举例来说，remove算法要求单向迭代器并且要求可以通过这些迭代器向容器中的对象赋值。所以，它不能用于由输入迭代器指定的区间，也不适用于map或multimap，同样不适用于某些set和multiset的实现。同样地，很多排序算法要求随机访问迭代器，所以对于list的元素不可能调用这些算法。有些算法要求排序的区间，即区间中的值是排过序的。有些算法既可以与排序的区间一起工作，也可以与未排序的区间一起工作，但是当它们作用在排序的区间上时，算法会更加有效。
+
+要求排序区间的STL算法：binaray_search、lower_bound、upper_bound、equal_range、set_union、set_intersection、set_difference、set_symmetric_difference、merge、inplace_merge、includes。
+
+unique、unique_copy并不一定要求排序的区间，但通常情况下会与排序区间一起使用。
