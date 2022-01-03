@@ -474,3 +474,86 @@ int test_item_18() {
 每当你要创建包含指针的关联容器时，一定要记住，容器将会按照指针的值进行排序。绝大多数情况下，这不会是你所希望的，所以你几乎肯定要创建自己的函数子类作为该容器的比较类型(comparison type)。
 
 如果你有一个包含智能指针或迭代器的容器，那么你也要考虑为它指定一个比较类型。对指针的解决方案同样也适用于那些类似指针的对象。就像DereferenceLess适合作为包含T*的关联容器的比较类型一样，对于容器中包含了指向T对象的迭代器或智能指针的情形，DereferenceLess也同样可用作比较类型。
+	
+## 第 21 条：总是让比较函数在等值情况下返回 false 
+
+实际踩坑简化版
+
+背景：现在我们有一个排序的结构体，假设数据经过召回、过滤等一系列操作后，得到最终的候选集，需要根据相应的策略，进行排序，最终返回 top k 结果
+```c++
+struct DataItem {
+  std::string data_id;
+  int priority;
+  int score;
+};
+```
+
+先根据 priority 值判断，最终根据 score 值是否相等返回。
+
+线上代码如下：
+
+```c++
+void DataSort(std::vector<DataItem> &data_items) {
+ std::sort(data_items.begin(), data_items.end(), [](const DataItem &item1, const DataItem &item2) {
+   if (item1.priority < item2.priority) {
+      return true;
+    } else if (item1.priority > item2.priority) {
+      return false;
+    }
+    return item1.score >= item2.score;
+ });
+}
+```
+
+测试环境构造测试 case，符合预期，上线。恐怖的事情来了，上线不久后，程序直接 coredump，然后自动重启，接着有 coredump，当时心情是很难形容。。。
+
+把 core 文件拉到本地调试或者编译成 debug 版，线上问题复现，原因就是因为 DataSort 导致，但是在 DataSort 中，就一个简单的排序，sort 不可能出现崩溃，唯一的原因，就是 lambda 函数实现有问题。
+
+重新修改 lambda 函数，把最后一句 return item1.score >= item2.score 改成 return false 执行，运行正常
+
+打开 Google，输入 std::sort coredump，看到了一句话
+
+❝
+Having a non-circular relationship is called non-transitivity for the < operator. It’s not too hard to realise that if your relationships are circular then you won’t be getting reasonable results. In fact there is a very strict set of rules that a data type and its comparators must abide by in order to get correct results from C++ STL algorithms, that is 「strict weak ordering」.
+❞
+
+从上面的意思看，在 STL 中，对于 sort 函数中的排序算法，需要遵循严格弱序(strict weak ordering)的原则。
+
+上面概念，总结下就是，存在两个变量x和y：
+
+- x > y 等同于  y < x
+- x == y 等同于 !(x < y) && !(x > y)
+
+对于 std::sort()，当容器里面元素的个数大于 _S_threshold 的枚举常量值时，会使用快速排序，在 STL 中这个值的默认值是16
+
+调试跟踪定位发现 sort 的函数调用链最终会调用 __unguarded_partition， 我们看下 __unguarded_partition 函数的定义：
+```c++
+template<typename _RandomAccessIterator, typename _Tp, typename _Compare>
+     _RandomAccessIterator
+     __unguarded_partition(_RandomAccessIterator __first,
+               _RandomAccessIterator __last,
+               _Tp __pivot, _Compare __comp) {
+       while (true) {
+       while (__comp(*__first, __pivot))
+         ++__first;
+       --__last;
+       while (__comp(__pivot, *__last))
+         --__last;
+       if (!(__first < __last))
+         return __first;
+       std::iter_swap(__first, __last);
+       ++__first;
+     }
+    }
+```
+
+在上面代码中，有下面一段：
+
+```c++
+while (__comp(*__first, __pivot))
+         ++__first;
+```
+
+其中，__first 为迭代器，__pivot 为中间值，__comp 为传入的比较函数。
+如果传入的 vector 中，按照之前的写法 >= 元素完全相等的情况下那么 __comp 比较函数一直是 true，那么后面 ++__first，最终就会使得迭代器失效，从而导致 coredump。
+至此，分析完毕，请记住，STL sort 自定义比较函数，总是对相同值的比较返回 false。
