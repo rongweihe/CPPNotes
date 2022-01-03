@@ -1017,3 +1017,24 @@ std::mem_fun_ref：将成员函数转换为函数对象(引用版本)。
 
 如果区间是排序的，那么通过binary_search、lower_bound、upper_bound和equal_range，你可以获得更快的查找速度(通常是对数时间的效率)。
 如果迭代器并没有指定一个排序的区间，那么你的选择范围将局限于count、count_if、find以及find_if，而这些算法仅能提供线性时间的效率。 
+
+	
+## 第 46 条: 考虑使用函数对象而不是函数作为STL算法的参数
+```c++
+struct StringSize : public std::unary_function<std::string, std::string::size_type> {
+	std::string::size_type operator()(const std::string& s) const
+	{
+		return s.size();
+	}
+};
+ 
+int test_item_46() {
+	std::set<std::string> s{ "abc", "cde", "xyzw" };
+	std::transform(s.begin(), s.end(), std::ostream_iterator<std::string::size_type>(std::cout, "\n"), std::mem_fun_ref(&std::string::size)); // 3 3 4，普通函数
+ 
+	std::transform(s.begin(), s.end(), std::ostream_iterator<std::string::size_type>(std::cout, "\n"), StringSize()); // 3 3 4, 函数对象
+ 
+	return 0;
+}
+```
+在C/C++中并不能真正地将一个函数作为参数传递给另一个函数。如果我们试图将一个函数作为参数进行传递，则编译器会隐式地将它转换成一个指向该函数的指针，并将该指针传递过去。函数指针参数抑制了内联机制。
