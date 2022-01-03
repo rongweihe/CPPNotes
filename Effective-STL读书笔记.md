@@ -406,3 +406,36 @@ int test_item_15() {
 ## 第 16 条：了解如何把 vector 和 string 数据传给旧的 API
 
 C++ 标准要求 vector 中的元素存储在连续的内存中，就像数组一样。string 中的数据不一定存储在连续的内存中，而且 string 的内部表示不一定是以空字符结尾的。
+
+## 第 17 条：使用”swap技巧”除去多余的容量
+
+```c++
+class Contestant {};
+int test_item_17() {
+	// 从contestants矢量中除去多余的容量
+	std::vector<Contestant> contestants;
+	// ... // 让contestants变大，然后删除它的大部分元素
+	// vector<Contestant>(contestants)创建一个临时矢量，vector的拷贝构造函数只为所拷贝的元素分配所需要的内存
+	std::vector<Contestant>(contestants).swap(contestants);
+ 
+	contestants.shrink_to_fit(); // C++11
+ 
+	std::string s;
+	// ... // 让s变大，然后删除它的大部分字符
+	std::string(s).swap(s);
+ 
+	s.shrink_to_fit(); // C++11
+ 
+	std::vector<Contestant>().swap(contestants); // 清除contestants并把它的容量变为最小
+ 
+	std::string().swap(s); // 清除s并把它的容量变为最小
+ 
+	return 0;
+}
+```
+
+对 vector 或 string 进行 shrink-to-fit 操作时，考虑”swap”技巧。C++11 中增加了shrink_to_fit 成员函数。
+
+swap 技巧的一种变化形式可以用来清除一个容器，并使其容量变为该实现下的最下值。
+
+在做 swap 的时候，不仅两个容器的内容被交换，同时它们的迭代器、指针和引用也将被交换(string除外)。在 swap 发生后，原先指向某容器中元素的迭代器、指针和引用依然有效，并指向同样的元素----但是，这些元素已经在另一个容器中了。
