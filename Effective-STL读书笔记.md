@@ -623,3 +623,14 @@ m.insert(Widget::value_type(1,5.13))
 
 原因在于 insert 调用需要一个 Widget::value_type 类型的参数（pair<int,Widget>），所以当我们调用 insert 时候，必须构造和析构一个该类型的对象，这样付出一个 pair 构造函数和一个 pair 析构函数的代价。而这又会导致 Widget 的构造和析构，因为 pair<int,Widget> 本身包含了一个 Widget 对象，而 operator[] 不使用 pair 对象，所以它不会构造和析构任何 pair 和 Widget
 
+## 第 25 条：熟悉非标准的散列容器
+
+C++11 中新增了四种关联容器，使用哈希函数组织的，即 unordered_map、unordered_multimap、unordered_set、unordered_multiset。
+
+- set：集合。底层为红黑树，元素有序，不重复；multiset：底层为红黑树，元素有序，可重复
+
+- map：底层为红黑树，键有序，不重复；multimap：底层为红黑树，键有序，可重复
+
+- unordered_set：底层为哈希表，无序，不重复；unordered_multiset：底层为哈希表，无序，可重复
+
+- unordered_map：底层为哈希表，无序，不重复；unordered_multiap：底层为哈希表，无序，可重复
