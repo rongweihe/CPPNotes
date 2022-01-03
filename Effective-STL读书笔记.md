@@ -1042,3 +1042,21 @@ int test_item_46() {
 ## 第 47 条: 避免产生”直写型”(write-only)的代码
 
 当你编写代码的时候，它看似非常直接和简捷，因为它是由某些基本想法(比如，erase-remove习惯用法加上在find中使用reverse_interator的概念)自然而形成的。然而，阅读代码的人却很难将最终的语句还原成它所依据的思路，这就是”直写型的代码”叫法的来历：虽然很容易编写，但是难以阅读和理解。一段代码是否是”直写型”取决于其读者的知识水平。
+
+	
+## 第 48 条: 总是包含(#include)正确的头文件
+
+C++标准与C的标准有所不同，它没有规定标准库中的头文件之间的相互包含关系。
+
+总结每个与STL有关的标准头文件中所包含的内容：
+
+(1). 几乎所有的标准STL容器都被声明在与之同名的头文件中，比如vector被声明在<vector>中，list被声明在<list>中，等等。但是<set>和<map>是个例外，<set>中声明了set和multiset，<map>中声明了map和multimap。
+
+(2). 除了4个STL算法以外，其它所有的算法都被声明在<algorithm>中，这4个算法使accumulate、inner_product、adjacent_difference和partial_sum，它们被声明在头文件<numeric>中。
+
+(3). 特殊类型的迭代器，包括istream_iterator和istreambuf_iterator，被声明在<iterator>中。
+
+(4). 标准的函数子(比如less<T>)和函数子配接器(比如not1、bind2nd)被声明在头文件<functional>中。
+
+任何时候如果你使用了某个头文件中的一个STL组件，那么你就一定要提供对应的#include指令，即使你正在使用的STL平台允许你省略#include指令，你也要将它们包含到你的代码中。当你需要将代码移植到其它平台上的时候，移植的压力就会减轻。
+ 
