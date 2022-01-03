@@ -799,3 +799,43 @@ int test_item_31() {
 - 如果有一个 vector、string、deque 或者数组，并且需要找到第n个位置上的元素，或者，需要找到等价性前面的n个元素但又不必对这n个元素进行排序，那么，nth_element正是你所需要的函数。
 - 如果需要将一个标准序列容器中的元素按照是否满足某个特定的条件区分开来，那么，partition 和 stable_partition 可能正是你所需要的。
 - 如果你的数据在一个 list，那么你仍然可以直接调用 partition 和 stable_partition 算法；你可以用 list::sort 来替代 sort 和 stable_sort 算法。但是，如果你需要获得 partial_sort 或 nth_element 算法的效果，那么，你可以有一些间接的途径来完成这项任务。
+
+	
+## 第 32 条：如果确实需要删除元素，则需要在 remove 这一类算法之后调用 erase
+记住一句话：remove 不是真正意义上的删除，因为它做不到。
+
+```c++
+int test_item_32() {
+	std::vector<int> v;
+	v.reserve(10);
+	for (int i = 1; i <= 10; ++i) v.push_back(i);
+	fprintf(stdout, "v.size: %d\n", v.size()); // 输出10
+	v[3] = v[5] = v[9] = 99;
+	std::remove(v.begin(), v.end(), 99); // 删除所有值等于99的元素
+	fprintf(stdout, "v.size: %d\n", v.size()); // 仍然输出10, remove不是真正意义上的删除，因为它做不到
+	for (auto i : v) fprintf(stdout, "%d\n", i);
+ 
+	v.erase(std::remove(v.begin(), v.end(), 99), v.end()); // 真正删除所有值等于99的元素	
+ 
+	return 0;
+}
+```
+
+remove 的原理：移动了区间中的元素，将 “不用被删除”的元素在v.begin()和newEnd之间，“需要被删除”的元素在newEnd和v.end()之间。它返回的迭代器是指向最后一个“不用被删除”的元素之后的元素。这个返回值相当于该区间“新的逻辑结尾”。
+
+remove 的声明：
+```c++
+template<class ForwardIterator, class T>
+ForwardIterator remove(ForwardIterator first, ForwardIterator last, const T& value);
+```
+根本就不接受容器作为参数，所以并不知道这些元素被存放在哪个容器中。
+
+删除区间中的 1 元素。
+
+[![THj83D.png](https://s4.ax1x.com/2022/01/03/THj83D.png)](https://imgtu.com/i/THj83D)
+
+std::remove并不接受容器作为参数，所以remove并不知道这些元素被存放在哪个容器中。并且，remove也不可能推断出是什么容器，因为无法从迭代器推知对应的容器类型。因为从容器中删除元素的唯一方法是调用该容器的成员函数，而remove并不知道它操作的元素所在的容器，所以remove不可能从容器中删除元素。
+
+std::list的remove成员函数是STL中唯一一个名为remove并且确实删除了容器中元素的函数。
+
+std::remove并不是唯一一个适用于这种情形的算法，其它还有两个属于”remove类”的算法：remove_if和unique。如同list::remove会真正删除元素(并且比使用erase-remove习惯用法更为高效)一样，std::list::unique也会真正删除元素(而且比使用erase-unique更为高效)。
