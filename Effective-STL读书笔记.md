@@ -740,7 +740,7 @@ std::transform(values.begin(), values.end(),results.begin(), fun);//覆盖 resul
 results.clear();
 results.reserve(values.size());
 std::transform(values.begin(), values.end(), std::back_inserter(results), fun);//覆盖 results 中前 values.size() 的元素
-
+```
 无论何时，如果所使用的算法需要指定一个目标区间，那么必须确保目标区间足够大，或者确保它会随着算法的运行而增大。要在算法执行过程中增大目标区间，请使用插入型迭代器，比如ostream_iterator或者由back_inserter、front_inserter和inserter返回的迭代器。
 
 
