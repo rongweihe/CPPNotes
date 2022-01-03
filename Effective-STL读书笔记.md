@@ -439,3 +439,24 @@ int test_item_17() {
 swap 技巧的一种变化形式可以用来清除一个容器，并使其容量变为该实现下的最下值。
 
 在做 swap 的时候，不仅两个容器的内容被交换，同时它们的迭代器、指针和引用也将被交换(string除外)。在 swap 发生后，原先指向某容器中元素的迭代器、指针和引用依然有效，并指向同样的元素----但是，这些元素已经在另一个容器中了。
+
+## 第 18 条： 避免使用vector<bool>
+```c++
+int test_item_18() {
+	std::vector<bool> v;
+	// error: cannot convert 'std::vector<bool>::reference* {aka std::_Bit_reference}' to 'bool*' in initialization
+	//bool* pb = &v[0]; // 不能被编译，原因：vector<bool>是一个假的容器，它并不真的储存bool，相反，为了节省空间，它储存的是bool的紧凑表示
+	return 0;
+}
+```
+作为一个 STL 容器，vector<bool> 只有两点不对。首先，它不是一个 STL 容器；其次，它并不存储bool。除此以外，一切正常。
+
+在一个典型的实现中，储存在 ”vector” 中的每个 ”bool” 仅占一个二进制位，一个 8 位的字节可容纳 8 个 ”bool”。在内部，vector<bool> 使用了与位域 (bit field)一样的思想，来表示它所存储的那些bool，实际上它只是假装存储了这些 bool。
+
+位域与 bool 相似，它只能表示两个可能的值，但是在 bool 和看似 bool 的位域之间有一个很重要的区别：你可以创建一个指向 bool 的指针，而指向单个位的指针则是不允许的。指向单个位的引用也是被禁止的。
+
+当你需要 vector<bool>时，标准库提供了两种选择，可以满足绝大多数情况下的需求。
+
+- 第一种是 deque<bool>。deque 几乎提供了 vector 所提供的一切(没有reserve和capacity)，但deque<bool> 是一个 STL 容器，而且它确实存储 bool。当然 deque 中元素的内存不是连续的，所以你不能把 deque<bool> 中的数据传递给一个期望 bool 数组的 C API。
+
+- 第二种可以替代 vector<bool> 的选择是 bitset。bitset 不是 STL 容器，但它是标准 C++ 库的一部分。与 STL 容器不同的是，它的大小(即元素的个数)在编译时就确定了，所以它不支持插入和删除元素。
