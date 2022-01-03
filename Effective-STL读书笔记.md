@@ -661,3 +661,28 @@ int test_item_27() {
 ```
 std::distance 用以取得两个迭代器(它们指向同一个容器)之间的距离；std::advance 则用于将一个迭代器移动指定的距离。
 
+## 第 28 条：正确理解由 reverse_iterator 的 base() 成员函数所产生的 iterator 的用法
+```c++
+int test_item_28() {
+	std::vector<int> v;
+	v.reserve(5);
+ 
+	for (int i = 1; i <= 5; ++i) v.push_back(i);
+ 
+	std::vector<int>::reverse_iterator ri = std::find(v.rbegin(), v.rend(), 3); // 使ri指向3
+	std::vector<int>::iterator i(ri.base());
+	fprintf(stdout, "%d\n", (*i)); // 4
+	v.insert(i, 99);
+	for (auto it = v.cbegin(); it != v.cend(); ++it) fprintf(stdout, "value: %d\n", *it); // 1 2 3 99 4 5
+ 
+	v.clear(); v.reserve(5);
+	for (int i = 1; i <= 5; ++i) v.push_back(i);
+	ri = std::find(v.rbegin(), v.rend(), 3);
+	v.erase((++ri).base());
+	for (auto it = v.cbegin(); it != v.cend(); ++it) fprintf(stdout, "value: %d\n", *it); // 1 2 4 5
+ 
+	return 0;
+}
+```
+如果要在一个reverse_iterator ri指定的位置上插入新元素，则只需在ri.base()位置处插入元素即可。对于插入操作而言，ri和ri.base()是等价的，ri.base()是真正与ri对应的iterator。
+如果要在一个reverse_iterator ri指定的位置上删除一个元素，则需要在ri.base()前面的位置上执行删除操作。对于删除操作而言，ri和ri.base()是不等价的，ri.base()不是与ri对应的iterator。
